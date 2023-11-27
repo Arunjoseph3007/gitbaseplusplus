@@ -1,0 +1,40 @@
+{
+  "name": "github-clone-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@webcontainer/api": "^1.1.5",
+    "apexcharts": "^3.36.0",
+    "axios": "^0.27.2",
+    "daisyui": "^2.24.0",
+    "highlight.js": "^11.6.0",
+    "next": "12.2.5",
+    "next-seo": "^5.5.0",
+    "nextjs-progressbar": "^0.0.14",
+    "react": "18.2.0",
+    "react-apexcharts": "^1.4.0",
+    "react-dom": "18.2.0",
+    "react-markdown": "^8.0.3",
+    "react-toastify": "^9.1.1",
+    "remark-gfm": "^3.0.1",
+    "three": "^0.145.0",
+    "timeago.js": "^4.0.2",
+    "uuid": "^8.3.2",
+    "vanta": "^0.5.24",
+    "xterm": "^5.2.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.4",
+    "autoprefixer": "^10.4.8",
+    "eslint": "8.22.0",
+    "eslint-config-next": "12.2.5",
+    "postcss": "^8.4.16",
+    "tailwindcss": "^3.1.8"
+  }
+}
