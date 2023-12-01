@@ -22,7 +22,7 @@ export default function ProjectsPage() {
       <div>
         {projects.map((project) => (
           <div
-            className="flex items-center justify-between gap-3 p-3 my-3 border shadow rounded-md"
+            className="flex items-center justify-between gap-3 p-3 my-3 mt-5 border shadow rounded-md"
             key={project.id}
           >
             <img
