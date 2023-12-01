@@ -2,10 +2,12 @@ import { useUser } from "@/context/userContext";
 import { EditIcon } from "@/icons/edit";
 import { PlusIcon } from "@/icons/plus";
 import UserLayout from "@/layouts/UserLayout";
+import axios from "@/libs/axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ProfilePage() {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
   const [details, setDetails] = useState({
     firstName: user?.firstName,
     lastName: user?.lastName,
@@ -18,6 +20,33 @@ export default function ProfilePage() {
     setDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await axios.patchForm(
+        `/accounts/MyUser/${localStorage.getItem("id")}/`,
+        {
+          first_name: details.firstName,
+          last_name: details.lastName,
+          profile_pic: imgFile,
+          bio: details.bio,
+          dob: details.dob,
+        }
+      );
+
+      setUser({
+        ...user,
+        ...details,
+        photoUrl: process.env.NEXT_PUBLIC_API + res.data.profile_pic,
+      });
+      setImgFile(null);
+      toast.success("Updated successfully");
+    } catch (e) {
+      toast.error("Something went wrong");
+    }
+  };
+
   useEffect(() => {
     user && setDetails(user);
   }, [user]);
@@ -27,7 +56,7 @@ export default function ProfilePage() {
       <h1 className="text-4xl font-medium mt-2 px-4 py-2">Profile</h1>
       <hr />
 
-      <form className="p-4">
+      <form onSubmit={handleSubmit} className="p-4">
         <div className="flex items-start gap-4">
           <div>
             <div className="relative">
@@ -111,6 +140,7 @@ export default function ProfilePage() {
                 <textarea
                   name="bio"
                   rows={5}
+                  maxLength={250}
                   value={details.bio}
                   onChange={handleChange}
                   placeholder="Your bio goes here"
