@@ -1,11 +1,13 @@
 import AdminHeader from "@/components/AdminHeader";
 import React from "react";
+import Link from "next/link";
 
 export default function admin() {
   return (
     <div>
       <AdminHeader/>
       <div className="flex justify-evenly ">
+      <Link href={"/admin/projects"}>
         <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105 hover:cursor-pointer">
           
             <div className="avatar  ">
@@ -29,7 +31,8 @@ export default function admin() {
                 Projects
           </div>
         </div>
-        
+        </Link>
+        <Link href={"/admin/users"}>
         <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105 hover:cursor-pointer">
           <div className="">
             <div className="avatar ">
@@ -54,7 +57,8 @@ export default function admin() {
                 Users
           </div>
         </div>
-
+        </Link>
+        <Link href={"/admin/adduser"}>
         <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105 hover:cursor-pointer">
           <div className="">
             <div className="avatar ">
@@ -79,6 +83,7 @@ export default function admin() {
                 Add User
           </div>
         </div>
+      </Link>
       </div>
     </div>
   );
