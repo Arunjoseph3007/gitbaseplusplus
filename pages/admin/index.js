@@ -1,20 +1,12 @@
+import AdminHeader from "@/components/AdminHeader";
 import React from "react";
 
 export default function admin() {
   return (
     <div>
-      <div className="flex items-center justify-center my-10">
-        <div className="flex flex-col items-center">
-          <div className="avatar">
-            <div className="w-24 rounded-full">
-              <img src="/logo4.png" />
-            </div>
-          </div>
-          <div className="text-2xl font-bold">Gitbase</div>
-        </div>
-      </div>
+      <AdminHeader/>
       <div className="flex justify-evenly ">
-        <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105">
+        <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105 hover:cursor-pointer">
           
             <div className="avatar  ">
               <div className="w-24  mask mask-squircle ">
@@ -38,7 +30,7 @@ export default function admin() {
           </div>
         </div>
         
-        <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105">
+        <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105 hover:cursor-pointer">
           <div className="">
             <div className="avatar ">
               <div className="w-24  mask mask-squircle ">
@@ -63,7 +55,7 @@ export default function admin() {
           </div>
         </div>
 
-        <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105">
+        <div className="w-[15rem] h-[18rem] my-5 rounded-lg shadow-xl bg-slate-200 flex flex-col flex-col-1  items-center  justify-center hover:scale-105 hover:cursor-pointer">
           <div className="">
             <div className="avatar ">
               <div className="w-24  mask mask-squircle ">
