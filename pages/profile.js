@@ -36,7 +36,7 @@ export default function ProfilePage() {
 
       setUser({
         ...user,
-        details,
+        ...details,
         photoUrl: process.env.NEXT_PUBLIC_API + res.data.profile_pic,
       });
       setImgFile(null);
