@@ -31,6 +31,7 @@ export default function ProfilePage() {
           last_name: details.lastName,
           profile_pic: imgFile,
           bio: details.bio,
+          dob: details.dob,
         }
       );
 
