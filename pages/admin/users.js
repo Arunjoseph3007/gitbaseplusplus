@@ -4,19 +4,64 @@ import { Email } from "@/icons/email";
 import { UserName } from "@/icons/username";
 import Link from "next/link";
 import AdminLayout from "@/layouts/AdminLayout";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Users() {
-  const users = new Array(7).fill(0).map((_, i) => ({
-    id: i,
-    firstName: "FirstName" + (i + 1),
-    secondName: "SecondName" + (i + 1),
-    email: "email_123@gmail.com",
-    userName: "myUserName",
-    image: "https://picsum.photos/200",
-    currentproject: "adminpannel",
-    noOfYears: "3+",
-  }));
+  const [userMode,setUserMode] = useState("All Users")
+  const [userDetails,setUserDetails] = useState([])
+  
+  const AllUsers = () =>{
+    const users = new Array(7).fill(0).map((_, i) => ({
+      id: i,
+      firstName: "FirstName" + (i + 1),
+      secondName: "SecondName" + (i + 1),
+      email: "email_123@gmail.com",
+      userName: "myUserName",
+      image: "https://picsum.photos/200",
+      currentproject: "adminpannel",
+      noOfYears: "3+",
+    }));
+    setUserDetails(users)
+  }
+  const Managers = () =>{
+    const users = new Array(5).fill(0).map((_, i) => ({
+      id: i,
+      firstName: "FirstName" + (i + 1),
+      secondName: "SecondName" + (i + 1),
+      email: "email_123@gmail.com",
+      userName: "myUserName",
+      image: "https://picsum.photos/200",
+      currentproject: "adminpannel",
+      noOfYears: "3+",
+    }));
+    setUserDetails(users)
+  }
+  const Admins = () =>{
+    const users = new Array(2).fill(0).map((_, i) => ({
+      id: i,
+      firstName: "FirstName" + (i + 1),
+      secondName: "SecondName" + (i + 1),
+      email: "email_123@gmail.com",
+      userName: "myUserName",
+      image: "https://picsum.photos/200",
+      currentproject: "adminpannel",
+      noOfYears: "3+",
+    }));
+    setUserDetails(users);
+  }
+  useEffect(()=>{
+      if(userMode == "Managers"){
+        Managers();
+      }
+      else if(userMode == "Admins"){
+        Admins();
+      }
+      else{
+        AllUsers();
+      }
+      console.log("Here")
+  },[userMode]);
+
   return (
     <div>
       <div className="flex justify-between mt-2 px-4 py-2">
@@ -41,27 +86,26 @@ export default function Users() {
           </svg>
           <ul className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
             <li>
-              <a>All Users</a>
+              <button onClick={()=>setUserMode("All Users")}>All Users</button>
             </li>
             <li>
-              <a>Managers Only</a>
+              <button onClick={()=>setUserMode("Managers")}>Managers Only</button>
             </li>
             <li>
-              <a>Admin Only</a>
+              <button onClick={()=>setUserMode("Admins")}>Admin Only</button>
             </li>
           </ul>
         </div>
       </div>
 
       <hr />
-
       <div className="font-semibold flex items-center justify-center text-2xl mt-3 underline">
         {" "}
-        All Users
+        {userMode}
       </div>
 
       <div>
-        {users.map((user) => (
+        {userDetails.map((user) => (
           <div className="flex justify-center">
             <div
               className="flex items-center justify-between w-[80%] gap-3 p-3 my-3 mt-5 border shadow rounded-full"
@@ -78,8 +122,8 @@ export default function Users() {
                 <div className="flex flex-col gap-1">
                   <div className="flex gap-2 items-center">
                     <Details />
-                    <h7 className="text-lg font-medium">{user.firstName}</h7>
-                    <h7 className="text-lg font-medium">{user.secondName}</h7>
+                    <h6 className="text-lg font-medium">{user.firstName}</h6>
+                    <h6 className="text-lg font-medium">{user.secondName}</h6>
                   </div>
                   <div className="flex gap-2">
                     <UserName />

@@ -17,7 +17,7 @@ const projects = new Array(7).fill(0).map((_, i) => ({
 export default function AdminProjects() {
   return (
     <div>
-      <h1 className="text-4xl font-medium mt-2 px-4 py-2">Projects</h1>
+      <h1 className="text-4xl font-medium mt-2 px-4 py-2 ">Projects</h1>
       <hr />
       <div>
         {projects.map((project) => (
