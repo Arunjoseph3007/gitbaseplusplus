@@ -59,7 +59,6 @@ export default function Users() {
       else{
         AllUsers();
       }
-      console.log("Here")
   },[userMode]);
 
   return (
