@@ -33,7 +33,7 @@ export default function AdminProjects() {
         "https://gitbase.pythonanywhere.com" + "/project/adminProject",
         config
       );
-      setProjects(allProjects);
+      setProjects(allProjects.data);
     } catch (e) {
       console.log(e);
       toast.error("Something Went Wrong");
@@ -52,7 +52,7 @@ export default function AdminProjects() {
         {projects.map((project) => (
           <div
             className="flex flex-1 items-center justify-between gap-4 p-3 border shadow rounded-md basis-[450px]"
-            key={project.id}
+            key={project.project_name}
           >
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
