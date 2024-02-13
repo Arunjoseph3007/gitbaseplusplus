@@ -76,7 +76,7 @@ export default function ProjectPage() {
               </p>
             </div>
 
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-3">
                 <span className="scale-[1.4] ml-2">
                   <UserIcon />
@@ -87,6 +87,10 @@ export default function ProjectPage() {
                 has {projectDetails.noOfUsers} users
               </p>
             </div>
+
+            <Link href={`/${router.query.projectName}/new`}>
+              <a className="btn">Create</a>
+            </Link>
           </div>
 
           <div className="flex gap-3 items-start mt-8">
@@ -113,25 +117,27 @@ export default function ProjectPage() {
         </div>
 
         {/* Tabs */}
-        <div role="tablist" className="tabs mt-12">
-          <button
-            onClick={() => setTab("user")}
-            role="tab"
-            className={`text-lg font-semibold tab  tab-bordered ${
-              tab == "user" && "tab-active"
-            }`}
-          >
-            Users
-          </button>
-          <button
-            onClick={() => setTab("repo")}
-            role="tab"
-            className={`text-lg font-semibold tab tab-bordered ${
-              tab == "repo" && "tab-active"
-            }`}
-          >
-            Repositories
-          </button>
+        <div className="flex justify-between items-center mt-10">
+          <div role="tablist" className="tabs">
+            <button
+              onClick={() => setTab("user")}
+              role="tab"
+              className={`text-lg font-semibold tab  tab-bordered ${
+                tab == "user" && "tab-active"
+              }`}
+            >
+              Users
+            </button>
+            <button
+              onClick={() => setTab("repo")}
+              role="tab"
+              className={`text-lg font-semibold tab tab-bordered ${
+                tab == "repo" && "tab-active"
+              }`}
+            >
+              Repositories
+            </button>
+          </div>
         </div>
 
         {/* User tab */}

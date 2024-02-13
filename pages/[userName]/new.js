@@ -22,7 +22,7 @@ export default function CreateRepoPage() {
         repo_name: repoName,
         is_public: isPublic,
       });
-      
+
       toast.success("Repo created sucessfully");
       router.push(`/${res.data.user_name}/${res.data.repo_name}`);
     } catch (error) {
@@ -49,19 +49,36 @@ export default function CreateRepoPage() {
 
       {/* //? Form */}
       <form onSubmit={handleSubmit} className="form-control ">
-        <label htmlFor="repo-name-input" className="label">
-          Repository name
-        </label>
-        <input
-          value={repoName}
-          onChange={handleChange}
-          id="repo-name-input"
-          type="text"
-          pattern="[a-zA-Z0-9_]{4,32}"
-          title="A string consisting alphabets, numbers and characters - or _ with length not more than 32 characters and not less than 4 characters"
-          className="input input-secondary input-bordered invalid:input-error"
-          required
-        />
+        <div className="flex gap-2 items-end">
+          <div>
+            <label className="label">Project name</label>
+            <input
+              value={router.query.userName}
+              onChange={handleChange}
+              readOnly
+              type="text"
+              className="input input-secondary input-bordered invalid:input-error"
+              required
+            />
+          </div>
+          <span className="text-4xl font-bold text-gray-400 mb-1">/</span>
+          <div className="flex-1">
+            <label htmlFor="repo-name-input" className="label">
+              Repository name
+            </label>
+            <input
+              value={repoName}
+              onChange={handleChange}
+              id="repo-name-input"
+              type="text"
+              pattern="[a-zA-Z0-9_]{4,32}"
+              title="A string consisting alphabets, numbers and characters - or _ with length not more than 32 characters and not less than 4 characters"
+              className="input input-secondary input-bordered invalid:input-error w-full"
+              required
+            />
+          </div>
+        </div>
+
         <label htmlFor="desc-input" className="label">
           Description
         </label>

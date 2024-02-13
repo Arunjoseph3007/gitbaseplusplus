@@ -52,13 +52,6 @@ export default function Navbar() {
       <div className="flex-none ">
         <ul className="menu menu-horizontal p-0">
           <li tabIndex="0">
-            <div className="hidden md:flex">
-              <Link href="/new">
-                <button>
-                  <PlusIcon />
-                </button>
-              </Link>
-            </div>
             {user ? (
               <div className="dropdown dropdown-end text-[0.5rem] md:text-[1rem]">
                 <label tabIndex="0" className="btn btn-ghost btn-circle avatar">
@@ -87,14 +80,6 @@ export default function Navbar() {
                     <li>
                       <Link href={"/" + user.userName}>
                         <a className="w-full">Profile</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/new">
-                        <a className="flex justify-end md:hidden ">
-                          New Repository
-                          <PlusIcon />
-                        </a>
                       </Link>
                     </li>
                     <li>
