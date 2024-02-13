@@ -1,17 +1,25 @@
 import { BranchIcon } from "@/icons/branch";
 import { UserIcon } from "@/icons/user";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "timeago.js";
 import { CollaboratorsIcon } from "@/icons/collaborators";
 import MainLayout from "@/layouts/MainLayout";
 import Link from "next/link";
+import { EditIcon } from "@/icons/edit";
+import { TickIcon } from "@/icons/tick";
+import { CloseIcon } from "@/icons/close";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export default function ProjectPage() {
   const router = useRouter();
   const [tab, setTab] = useState("user");
+  const [isEditing, setIsEditing] = useState(false);
+  const [desc, setDesc] = useState("");
   const [projectDetails, setProjectDetails] = useState({
     projectName: router.query.projectName,
+    projectId: 3,
     createdAt: new Date().toDateString(),
     noOfRepos: 12,
     noOfUsers: 16,
@@ -50,6 +58,32 @@ export default function ProjectPage() {
       },
     }))
   );
+
+  const editDesc = async () => {
+    try {
+      const res = await axios.put(
+        "https://gitbase.pythonanywhere.com" +
+          "/project/adminProjectUpdate/" +
+          projectDetails.projectId,
+        { project_description: desc },
+        {
+          headers: {
+            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          },
+        }
+      );
+
+      toast.success("Updated successfully");
+      setIsEditing(false);
+      setProjectDetails((p) => ({ ...p, description: desc }));
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    setDesc(projectDetails.description);
+  }, [projectDetails]);
 
   return (
     <main className="flex justify-center">
@@ -107,11 +141,49 @@ export default function ProjectPage() {
                 </p>
               </div>
             </div>
-            <div>
+            <div className="relative flex-1">
               <p className="font-semibold text-lg">Description</p>
-              <p className="text-gray-400 text-sm">
-                {projectDetails.description}
-              </p>
+              {isEditing ? (
+                <textarea
+                  className="textarea textarea-bordered w-full"
+                  value={desc}
+                  onChange={(e) => setDesc(e.target.value)}
+                />
+              ) : (
+                <p className="text-gray-400 text-sm">
+                  {projectDetails.description}
+                </p>
+              )}
+
+              {isEditing ? (
+                <div className="absolute -top-2 -right-2 flex gap-2">
+                  <button
+                    onClick={() => editDesc()}
+                    className="btn btn-circle btn-sm"
+                  >
+                    <span className="scale-75">
+                      <TickIcon />
+                    </span>
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="btn btn-circle btn-sm"
+                  >
+                    <span className="scale-75">
+                      <CloseIcon />
+                    </span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="absolute -top-2 -right-2 btn btn-circle btn-sm"
+                >
+                  <span className="scale-75">
+                    <EditIcon />
+                  </span>
+                </button>
+              )}
             </div>
           </div>
         </div>
