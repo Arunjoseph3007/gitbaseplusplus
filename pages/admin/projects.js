@@ -21,6 +21,31 @@ export default function AdminProjects() {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  const createProject = async (e) => {
+    if (!createProjectDetails.project_name) {
+      toast.error("Enter valid project details");
+      return;
+    }
+    try {
+      const res = await axios.post(
+        "https://gitbase.pythonanywhere.com" + "/project/adminProject",
+        {
+          project_name: createProjectDetails.project_name,
+          project_description: createProjectDetails.project_desc,
+        },
+        {
+          headers: {
+            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          },
+        }
+      );
+      toast.success("Project created successfully");
+      fetchProjects()
+      setCreateProjectDetails({ project_name: "", project_desc: "" });
+    } catch (error) {
+      toast.error("Couldn't create Project");
+    }
+  };
   async function fetchProjects() {
     try {
       let config = {
@@ -92,34 +117,36 @@ export default function AdminProjects() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="project_name" className="font-bold mb-1 text-gray-700 block">
+                    <label
+                      htmlFor="project_name"
+                      className="font-bold mb-1 text-gray-700 block"
+                    >
                       Project Description
                     </label>
                     <textarea
-                     type="text"
-                     placeholder="description"
-                     name="project_name"
-                     onChange={handleChange}
-                     className="input h-10"
-                     style={{ width: "100%" }}
-                     value={createProjectDetails.project_desc}
+                      type="text"
+                      placeholder="description"
+                      name="project_desc"
+                      onChange={handleChange}
+                      className="input"
+                      style={{ width: "100%" }}
+                      value={createProjectDetails.project_desc}
                     />
                   </div>
                 </div>
               </form>
-            <div className="flex justify-center gap-12">
-              <div className="modal-action flex justify-center">
-                <label
-                  htmlFor="create-project"
-                  className="btn btn-sm md:btn-wide mb-2"
-                  
-                >
-                  Create
-                </label>
+              <div className="flex justify-center gap-12">
+                <div className="modal-action flex justify-center">
+                  <label
+                    htmlFor="create-project"
+                    className="btn btn-sm md:btn-wide mb-2"
+                    onClick={createProject}
+                  >
+                    Create
+                  </label>
+                </div>
               </div>
             </div>
-            </div>
-
           </div>
         </div>
       </div>
