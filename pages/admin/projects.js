@@ -23,6 +23,16 @@ export default function AdminProjects() {
       }))
   );
 
+  const [createProjectDetails, setCreateProjectDetails] = useState({
+    project_name: "",
+    project_desc: "",
+  });
+
+  const handleChange = (e) =>
+    setCreateProjectDetails((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   async function fetchProjects() {
     try {
       let config = {
@@ -52,11 +62,77 @@ export default function AdminProjects() {
         <div className="form-control flex items-center">
           <label
             htmlFor="create-project"
-            className=" flex-1 btn btn-sm btn-outline items-center gap-1 capitalize"
+            className=" flex-1 btn btn-sm btn-outline items-center capitalize justify-center pr-5"
           >
+            <span className="scale-90">
+              <PlusIcon />
+            </span>
             Create Project
-            <PlusIcon />
           </label>
+        </div>
+        <input type="checkbox" id="create-project" className="modal-toggle" />
+        <div className="modal">
+          <div className="modal-box justify-center">
+            <label
+              htmlFor="create-project"
+              className="btn btn-sm rounded-full h-10 w-10 absolute top-5 right-5 rotate-45"
+            >
+              <PlusIcon />
+            </label>
+            <h3 className="font-bold text-lg capitalize flex justify-center">
+              Create New Project
+            </h3>
+
+            <div className="mt-5">
+              <form className="bg-white sm:max-w-full max-w-md rounded overflow-hidden shadow-lg">
+                <div className="p-6 ">
+                  <div>
+                    <label
+                      htmlFor="project_name"
+                      className="font-bold mb-1 text-gray-700 block"
+                    >
+                      Project Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="name"
+                      name="project_name"
+                      onChange={handleChange}
+                      className="input"
+                      style={{ width: "100%" }}
+                      value={createProjectDetails.project_name}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="project_name" className="font-bold mb-1 text-gray-700 block">
+                      Project Description
+                    </label>
+                    <textarea
+                     type="text"
+                     placeholder="description"
+                     name="project_name"
+                     onChange={handleChange}
+                     className="input h-10"
+                     style={{ width: "100%" }}
+                     value={createProjectDetails.project_desc}
+                    />
+                  </div>
+                </div>
+              </form>
+            <div className="flex justify-center gap-12">
+              <div className="modal-action flex justify-center">
+                <label
+                  htmlFor="create-project"
+                  className="btn btn-sm md:btn-wide mb-2"
+                  
+                >
+                  Create
+                </label>
+              </div>
+            </div>
+            </div>
+
+          </div>
         </div>
       </div>
       <hr />
