@@ -1,5 +1,6 @@
 import { BranchIcon } from "@/icons/branch";
 import { CollaboratorsIcon } from "@/icons/collaborators";
+import { PlusIcon } from "@/icons/plus";
 import AdminLayout from "@/layouts/AdminLayout";
 import axios from "axios";
 import Link from "next/link";
@@ -46,7 +47,18 @@ export default function AdminProjects() {
 
   return (
     <div>
-      <h1 className="text-4xl font-medium mt-2 px-4 py-2 ">Projects</h1>
+      <div className="flex items-center justify-between mx-4 py-4">
+        <h1 className="text-4xl font-medium ">Projects</h1>
+        <div className="form-control flex items-center">
+          <label
+            htmlFor="create-project"
+            className=" flex-1 btn btn-sm btn-outline items-center gap-1 capitalize"
+          >
+            Create Project
+            <PlusIcon />
+          </label>
+        </div>
+      </div>
       <hr />
       <div className="mt-4 mx-4 flex flex-wrap gap-3 justify-center">
         {projects.map((project) => (
