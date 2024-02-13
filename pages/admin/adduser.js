@@ -1,5 +1,7 @@
 import AdminLayout from "@/layouts/AdminLayout";
+import axios from "axios";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Adduser() {
   const [userDetails, setUserDetails] = useState({
@@ -10,10 +12,63 @@ export default function Adduser() {
     password: "",
     confirmPassword: "",
   });
+
   //$ Change handler
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setUserDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  const addUser = (e) => {};
+  };
+
+  const addUser = async (e) => {
+    try {
+      if (
+        !userDetails.firstName ||
+        !userDetails.lastName ||
+        !userDetails.email ||
+        !userDetails.userName
+      ) {
+        toast.error("Enter valid user details");
+        return;
+      }
+
+      if (
+        !userDetails.password ||
+        userDetails.password != userDetails.confirmPassword
+      ) {
+        toast.error("Password mismatch");
+        return;
+      }
+
+      const res = await axios.post(
+        "https://gitbase.pythonanywhere.com" + "/accounts/register",
+        {
+          username: userDetails.userName,
+          email: userDetails.email,
+          first_name: userDetails.firstName,
+          last_name: userDetails.lastName,
+          password: userDetails.password,
+        },
+        {
+          headers: {
+            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          },
+        }
+      );
+
+      toast.success("User added successfully");
+
+      setUserDetails({
+        firstName: "",
+        lastName: "",
+        userName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+    } catch (error) {
+      toast.error("Couldnt add user");
+    }
+  };
+
   return (
     <div>
       <h1 className="text-4xl font-medium mt-2 px-4 py-2 ">Add Users</h1>
@@ -56,7 +111,7 @@ export default function Adduser() {
           <div className="flex items-center gap-2">
             <div className="form-control flex-1">
               <label className="label">
-                <span className="label-text font-semibold">UserName</span>
+                <span className="label-text font-semibold">User Name</span>
               </label>
               <label className="input-group w-full">
                 <input
