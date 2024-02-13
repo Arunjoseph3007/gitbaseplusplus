@@ -9,19 +9,7 @@ import { toast } from "react-toastify";
 import { format } from "timeago.js";
 
 export default function AdminProjects() {
-  const [projects, setProjects] = useState(
-    Array(1)
-      .fill(0)
-      .map((_, i) => ({
-        id: i,
-        project_name: "Project " + i,
-        created_at: new Date().toDateString(),
-        project_description:
-          "Project description goes here Project description goes here Project description goes here Project ",
-        repos_count: 4,
-        members_count: 16,
-      }))
-  );
+  const [projects, setProjects] = useState([]);
 
   const [createProjectDetails, setCreateProjectDetails] = useState({
     project_name: "",
