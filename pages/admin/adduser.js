@@ -13,9 +13,7 @@ export default function Adduser() {
   //$ Change handler
   const handleChange = (e) =>
     setUserDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  const addUser = (e) =>{
-
-  }
+  const addUser = (e) => {};
   return (
     <div>
       <h1 className="text-4xl font-medium mt-2 px-4 py-2 ">Add Users</h1>
@@ -129,30 +127,27 @@ export default function Adduser() {
           <div className="modal">
             <div className="modal-box">
               <h3 className="font-bold text-lg">Adding User</h3>
-              <p className="py-4">
-                Are you sure, you want to add this user?
-              </p>
+              <p className="py-4">Are you sure, you want to add this user?</p>
               <div className="flex justify-center gap-12">
-
-              <div className="modal-action flex justify-center">
-                <label
-                  htmlFor="my-alert"
-                  className="btn btn-primary w-[8rem] "
-                  onClick={addUser}
-                >
-                  Yes
-                </label>
+                <div className="modal-action flex justify-center">
+                  <label
+                    htmlFor="my-alert"
+                    className="btn btn-primary w-[8rem] "
+                    onClick={addUser}
+                  >
+                    Yes
+                  </label>
+                </div>
+                <div className="modal-action flex justify-center">
+                  <label
+                    htmlFor="my-alert"
+                    className="btn btn-secondary w-[8rem]  "
+                    onClick={addUser}
+                  >
+                    No
+                  </label>
+                </div>
               </div>
-              <div className="modal-action flex justify-center">
-                <label
-                  htmlFor="my-alert"
-                  className="btn btn-secondary w-[8rem]  "
-                  onClick={addUser}
-                >
-                  No
-                </label>
-              </div>
-                  </div>
             </div>
           </div>
         </div>
