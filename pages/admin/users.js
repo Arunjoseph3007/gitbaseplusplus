@@ -5,51 +5,20 @@ import { UserName } from "@/icons/username";
 import Link from "next/link";
 import AdminLayout from "@/layouts/AdminLayout";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { format } from "timeago.js";
 
 export default function Users() {
   const [userMode,setUserMode] = useState("All Users")
   const [userDetails,setUserDetails] = useState([])
+  const [allUserDetails,setAllUserDetails] = useState([])
   
-  const AllUsers = () =>{
-    const users = new Array(7).fill(0).map((_, i) => ({
-      id: i,
-      firstName: "FirstName" + (i + 1),
-      secondName: "SecondName" + (i + 1),
-      email: "email_123@gmail.com",
-      userName: "myUserName",
-      image: "https://picsum.photos/200",
-      currentproject: "adminpannel",
-      noOfYears: "3+",
-    }));
-    setUserDetails(users)
-  }
-  const Managers = () =>{
-    const users = new Array(5).fill(0).map((_, i) => ({
-      id: i,
-      firstName: "FirstName" + (i + 1),
-      secondName: "SecondName" + (i + 1),
-      email: "email_123@gmail.com",
-      userName: "myUserName",
-      image: "https://picsum.photos/200",
-      currentproject: "adminpannel",
-      noOfYears: "3+",
-    }));
-    setUserDetails(users)
-  }
-  const Admins = () =>{
-    const users = new Array(2).fill(0).map((_, i) => ({
-      id: i,
-      firstName: "FirstName" + (i + 1),
-      secondName: "SecondName" + (i + 1),
-      email: "email_123@gmail.com",
-      userName: "myUserName",
-      image: "https://picsum.photos/200",
-      currentproject: "adminpannel",
-      noOfYears: "3+",
-    }));
-    setUserDetails(users);
-  }
   useEffect(()=>{
+      const elem = document.activeElement;
+      if(elem){
+        elem?.blur();
+      }
       if(userMode == "Managers"){
         Managers();
       }
@@ -60,6 +29,53 @@ export default function Users() {
         AllUsers();
       }
   },[userMode]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+  const convertToUserFormat = (allUsers) =>{
+    const users = allUsers.map((user) => ({
+      id: user.username,
+      firstName: user.first_name,
+      secondName: user.last_name,
+      email: user.email,
+      userName: user.username,
+      image: "https://gitbase.pythonanywhere.com" +user.profile_pic,
+      isManager:user.is_manager,
+      isAdmin:user.is_creator,
+      currentproject: "adminpannel",
+      noOfYears: user.date_joined,
+    }));
+    return users
+  }
+
+  async function fetchUsers() {
+    try {
+      let config = {
+        headers: {
+          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+        },
+      };
+      const allUsers = await axios.get(
+        "https://gitbase.pythonanywhere.com" + "/accounts/register",
+        config
+      );
+      setUserDetails(convertToUserFormat(allUsers.data));
+      setAllUserDetails(convertToUserFormat(allUsers.data));
+    } catch (e) {
+      console.log(e);
+      toast.error("Something Went Wrong");
+    }
+  }
+  const AllUsers = () =>{
+    setUserDetails(allUserDetails)
+  }
+  const Managers = () =>{
+    setUserDetails(allUserDetails.filter((user)=>{return user.isManager}))
+  }
+  const Admins = () =>{
+    setUserDetails(allUserDetails.filter((user)=>{return user.isAdmin}));
+  }
 
   return (
     <div>
@@ -108,7 +124,7 @@ export default function Users() {
           <div className="flex justify-center">
             <div
               className="flex items-center justify-between w-[80%] gap-3 p-3 my-3 mt-5 border shadow rounded-full"
-              key={user.id}
+              key={user.userName}
             >
               <div className="w-[10%]">
                 <img
@@ -117,8 +133,8 @@ export default function Users() {
                   className="h-[80px] aspect-square rounded-full object-cover"
                 />
               </div>
-              <div className="flex-1 flex justify-evenly w-[30%]">
-                <div className="flex flex-col gap-1">
+              <div className="flex-1 flex justify-between w-[30%]">
+                <div className="flex flex-col gap-1 ml-5">
                   <div className="flex gap-2 items-center">
                     <Details />
                     <h6 className="text-lg font-medium">{user.firstName}</h6>
@@ -134,7 +150,7 @@ export default function Users() {
                   </div>
                 </div>
 
-                <div className="flex w-[40%]">
+                <div className="flex w-[40%] justify-start">
                   <div className="flex flex-col   justify-evenly ">
                     <div className="flex gap-2 items-center justify-start">
                       <div className=" badge badge-primary ">CurrentProject</div>
@@ -143,7 +159,7 @@ export default function Users() {
                     <div>
                     <div className="flex gap-2 items-center justify-start">
                       <div className=" badge  ">Experience</div>
-                      <div>{user.noOfYears} yrs</div>
+                      <div>{format(user.noOfYears)}</div>
                     </div>
                     </div>
                   </div>
