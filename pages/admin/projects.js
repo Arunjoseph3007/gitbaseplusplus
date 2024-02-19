@@ -15,6 +15,9 @@ export default function AdminProjects() {
     project_name: "",
     project_desc: "",
   });
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
   const handleChange = (e) =>
     setCreateProjectDetails((prev) => ({
@@ -63,10 +66,6 @@ export default function AdminProjects() {
       toast.error("Something Went Wrong");
     }
   }
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
 
   return (
     <div>
