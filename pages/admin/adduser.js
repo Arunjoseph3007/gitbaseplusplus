@@ -37,7 +37,7 @@ export default function Adduser() {
         toast.error("Password mismatch");
         return;
       }
-
+      let isAdmin = document.getElementById('admin').checked || false;
       const res = await axios.post(
         "https://gitbase.pythonanywhere.com" + "/accounts/register",
         {
@@ -46,6 +46,7 @@ export default function Adduser() {
           first_name: userDetails.firstName,
           last_name: userDetails.lastName,
           password: userDetails.password,
+          is_creator: isAdmin
         },
         {
           headers: {
@@ -171,6 +172,19 @@ export default function Adduser() {
               value={userDetails.confirmPassword}
               className="input input-bordered invalid:border-error"
             />
+          </div>
+
+          {/* //@ Make Admin */}
+          <div className="form-control">
+            <label className="label cursor-pointer justify-start gap-10">
+              <span className="label-text font-semibold ">Make Admin</span>
+            <div className="flex justify-start gap-10 mb-0 pb-0">
+              Yes
+              <input type="radio" name="radio-1" id="admin" className="radio" />
+              No
+              <input type="radio" name="radio-1" id="notAdmin" className="radio" checked />
+            </div>
+            </label>
           </div>
 
           <div className="form-control mt-5">
