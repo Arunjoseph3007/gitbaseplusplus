@@ -1,4 +1,6 @@
+import useDebounceEffect from "@/hooks/useDebounceEffect";
 import { PlusIcon } from "@/icons/plus";
+import axios from "axios";
 import { useState } from "react";
 
 const KEY = "add-user-modal";
@@ -23,6 +25,34 @@ export default function AddUserToProjectModal() {
   const addMember = (role) => {
     close();
   };
+
+  useDebounceEffect(async () => {
+    if (!search) {
+      setUserRes([]);
+      return;
+    }
+
+    const res = await axios.get(
+      "https://gitbase.pythonanywhere.com" + "/accounts/userSearch",
+      {
+        params: { keyword: search },
+        headers: {
+          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+        },
+      }
+    );
+
+    setUserRes(
+      res.data.map((user) => ({
+        id: user.id,
+        firstName: user.first_name,
+        secondName: user.last_name,
+        email: user.email,
+        userName: user.username,
+        image: "https://gitbase.pythonanywhere.com" + user.profile_pic,
+      }))
+    );
+  }, [search]);
 
   return (
     <>
