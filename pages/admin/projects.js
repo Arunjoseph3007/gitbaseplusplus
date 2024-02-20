@@ -155,11 +155,11 @@ export default function AdminProjects() {
           <div
             className="flex flex-1 items-center justify-between gap-4 p-3 border shadow rounded-md basis-[450px]"
             key={project.project_name}
-          >
+            >
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-medium">
-                  <Link href={"/" + project.name}>{project.project_name}</Link>
+                  <Link href={"/projects/" + project.project_name}>{project.project_name}</Link>
                 </h3>
                 <div className="w-[6px] aspect-square rounded-full bg-gray-300"></div>
                 <p className="text-gray-400 text-sm">
