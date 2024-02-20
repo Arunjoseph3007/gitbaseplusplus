@@ -33,17 +33,7 @@ export default function ProjectPage() {
       userName: "Admin 2",
     },
   });
-  const [users, setUser] = useState(
-    new Array(7).fill(0).map((_, i) => ({
-      id: i,
-      firstName: "First" + (i + 1),
-      secondName: "Second" + (i + 1),
-      email: "email_123@gmail.com",
-      userName: "myUserName",
-      image: "https://picsum.photos/200?random=" + i,
-      isManager: Math.random() > 0.5,
-    }))
-  );
+  const [users, setUsers] = useState([]);
   const [repos, setRepos] = useState(
     new Array(7).fill(0).map((_, i) => ({
       id: i,
@@ -83,9 +73,39 @@ export default function ProjectPage() {
     }
   };
 
+  const fetchProjectAccess = async () => {
+    if (!router.query.projectName) return;
+
+    const res = await axios.get(
+      "https://gitbase.pythonanywhere.com" + "/project/adminProjectAccess",
+      {
+        params: { project_name: router.query.projectName },
+        headers: {
+          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+        },
+      }
+    );
+
+    setUsers(
+      res.data.map((user) => ({
+        id: user.user_id.id,
+        firstName: user.user_id.first_name,
+        secondName: user.user_id.last_name,
+        email: user.user_id.email,
+        userName: user.user_id.username,
+        image: "https://gitbase.pythonanywhere.com" + user.user_id.profile_pic,
+        isManager: user.is_manager,
+      }))
+    );
+  };
+
   useEffect(() => {
     setDesc(projectDetails.description);
   }, [projectDetails]);
+
+  useEffect(() => {
+    fetchProjectAccess();
+  }, [router.query.projectName]);
 
   return (
     <main className="flex justify-center">
