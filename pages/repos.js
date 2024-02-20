@@ -1,23 +1,45 @@
 import { CollaboratorsIcon } from "@/icons/collaborators";
 import UserLayout from "@/layouts/UserLayout";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { format } from "timeago.js";
 
-const repos = new Array(7).fill(0).map((_, i) => ({
-  id: i,
-  project: "Project00",
-  name: "Repo " + i,
-  createdAt: new Date().toDateString(),
-  description:
-    "Repo description goes here Repo description goes here. Repo description goes here Repo description goes here.",
-  noOfUsers: 16,
-  createdBy: {
-    userId: i + 12,
-    photoUrl: "https://picsum.photos/200?random=" + i,
-    userName: "Manager" + (i + 12).toString(),
-  },
-}));
-
 export default function ReposPage() {
+  const [repos, setRepos] = useState([]);
+
+  useEffect(() => {
+    const fetchRepos = async () => {
+      const res = await axios.get(
+        "https://gitbase.pythonanywhere.com" + "/repository/userRepos",
+        {
+          headers: {
+            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          },
+        }
+      );
+
+      setRepos(
+        res.data.map((repo) => ({
+          id: repo.id,
+          project: repo.project_id.project_name,
+          name: repo.repo_name,
+          createdAt: repo.created_at,
+          description: repo.repo_description,
+          noOfUsers: repo.contributors_count,
+          createdBy: {
+            userId: repo.created_by.id,
+            userName: repo.created_by.username,
+            photoUrl:
+              "https://gitbase.pythonanywhere.com" +
+              repo.created_by.profile_pic,
+          },
+        }))
+      );
+    };
+
+    fetchRepos();
+  }, []);
+
   return (
     <div>
       <h1 className="text-4xl font-medium mt-2 px-4 py-2">Repos</h1>
@@ -45,7 +67,7 @@ export default function ReposPage() {
                 <img
                   src={repo.createdBy.photoUrl}
                   alt={repo.createdBy.userName}
-                  className="w-5 aspect-square object-contain rounded-full"
+                  className="w-6 aspect-square object-contain rounded-full"
                 />
                 <p className="text-gray-400 text-sm">
                   <span className="cursor-pointer hover:underline">

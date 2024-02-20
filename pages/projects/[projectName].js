@@ -11,12 +11,14 @@ import { TickIcon } from "@/icons/tick";
 import { CloseIcon } from "@/icons/close";
 import { toast } from "react-toastify";
 import axios from "axios";
+import AddUserToProjectModal from "@/components/AddUserToProjectModal";
 
 export default function ProjectPage() {
   const router = useRouter();
   const [tab, setTab] = useState("user");
   const [isEditing, setIsEditing] = useState(false);
   const [desc, setDesc] = useState("");
+  const [search, setSearch] = useState("");
   const [projectDetails, setProjectDetails] = useState({
     projectName: router.query.projectName,
     projectId: 3,
@@ -215,39 +217,75 @@ export default function ProjectPage() {
         {/* User tab */}
         {tab == "user" && (
           <div>
-            {users.map((user) => (
-              <div
-                className="border m-2 p-2 rounded-md flex gap-8"
-                key={user.id}
-              >
-                <img
-                  src={user.image}
-                  alt={user.userName}
-                  className="w-24 aspect-sqaure rounded-full"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-lg font-medium">
-                      {user.firstName} {user.secondName}
-                    </p>
-                    <div className="w-2 h-2 bg-gray-200 rounded-full" />
-                    <p className="text-gray-400 text-sm">{user.userName}</p>
+            <div className="flex gap-3 items-center max-w-[850px] mx-auto my-6">
+              <input
+                className="input input-bordered rounded-full flex-1"
+                placeholder="Search users..."
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <AddUserToProjectModal />
+            </div>
+            {users
+              .filter(
+                (user) =>
+                  user.secondName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                  user.firstName.toLowerCase().includes(search.toLowerCase()) ||
+                  user.userName.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((user) => (
+                <div
+                  className="border m-2 p-2 rounded-md flex gap-8"
+                  key={user.id}
+                >
+                  <img
+                    src={user.image}
+                    alt={user.userName}
+                    className="w-24 aspect-sqaure rounded-full"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <Link href={`/${user.userName}`}>
+                        <a className="text-lg font-medium">
+                          {user.firstName} {user.secondName}
+                        </a>
+                      </Link>
+                      <div className="w-2 h-2 bg-gray-200 rounded-full" />
+                      <p className="text-gray-400 text-sm">{user.userName}</p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <p className="text-gray-500 text-sm w-[60px]">Email</p>
+                      <p>{user.email}</p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-2">
+                      <p className="text-gray-500 text-sm w-[60px]">Role</p>
+                      <p>{user.isManager ? "Manager" : "Developer"}</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <p className="text-gray-500 text-sm w-[60px]">Email</p>
-                    <p>{user.email}</p>
-                  </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <p className="text-gray-500 text-sm w-[60px]">Role</p>
-                    <p>{user.isManager ? "Manager" : "Developer"}</p>
+
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="dropdown dropdown-end">
+                      <label tabIndex={0} className="btn btn-success w-36">
+                        Change Role
+                      </label>
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content border-2 menu p-2 shadow-xl bg-base-100 rounded-box w-52"
+                      >
+                        <li>
+                          <a>Manager {user.isManager && <TickIcon />}</a>
+                        </li>
+                        <li>
+                          <a>Developer {!user.isManager && <TickIcon />}</a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <button className="btn btn-error w-36">Remove User</button>
                   </div>
                 </div>
-
-                <Link href={`/${user.userName}`}>
-                  <a className="self-end text-sm underline">Go to profile</a>
-                </Link>
-              </div>
-            ))}
+              ))}
           </div>
         )}
 

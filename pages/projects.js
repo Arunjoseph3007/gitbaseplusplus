@@ -1,20 +1,40 @@
 import { BranchIcon } from "@/icons/branch";
 import { CollaboratorsIcon } from "@/icons/collaborators";
 import UserLayout from "@/layouts/UserLayout";
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { format } from "timeago.js";
 
-const projects = new Array(8).fill(0).map((_, i) => ({
-  id: i,
-  name: "Project " + i,
-  createdAt: new Date().toDateString(),
-  description:
-    "Project description goes here Project description goes here Project description goes here Project description goes here ",
-  noOfRepos: 4,
-  noOfUsers: 16,
-}));
-
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState([]);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const res = await axios.get(
+        "https://gitbase.pythonanywhere.com" + "/project/userProject",
+        {
+          headers: {
+            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          },
+        }
+      );
+
+      setProjects(
+        res.data.map((proj) => ({
+          id: proj.id,
+          name: proj.project_name,
+          createdAt: proj.created_at,
+          description: proj.project_description,
+          noOfRepos: proj.repos_count,
+          noOfUsers: proj.members_count,
+        }))
+      );
+    };
+
+    fetchProjects();
+  }, []);
+
   return (
     <div>
       <h1 className="text-4xl font-medium mt-2 px-4 py-2">Projects</h1>
