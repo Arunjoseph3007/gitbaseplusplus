@@ -21,16 +21,15 @@ export default function ProjectPage() {
   const [search, setSearch] = useState("");
   const [projectDetails, setProjectDetails] = useState({
     projectName: router.query.projectName,
-    projectId: 3,
+    projectId: 0,
     createdAt: new Date().toDateString(),
-    noOfRepos: 12,
-    noOfUsers: 16,
-    description:
-      "A very very long description. A very very long description. A very very long description. A very very long description. ",
+    noOfRepos: 0,
+    noOfUsers: 0,
+    description: "",
     admin: {
-      userId: 12,
-      photoUrl: "https://picsum.photos/200",
-      userName: "Admin 2",
+      userId: 0,
+      photoUrl: "https://gitbase.pythonanywhere.com" + "/media/default.png",
+      userName: "",
     },
   });
   const [users, setUsers] = useState([]);
@@ -73,6 +72,57 @@ export default function ProjectPage() {
     }
   };
 
+  const updateProjectAccess = async (projectAccessId, isManager) => {
+    if (!router.query.projectName) return;
+
+    try {
+      const res = await axios.putForm(
+        "https://gitbase.pythonanywhere.com" +
+          "/project/adminProjectAccess/" +
+          projectAccessId,
+        { is_manager: isManager },
+        {
+          headers: {
+            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+          },
+        }
+      );
+      toast.success("Access updated");
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.projectAccessId == projectAccessId ? { ...u, isManager } : u
+        )
+      );
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  const removeProjectAccess = async (projectAccessId) => {
+    if (!router.query.projectName) return;
+
+    try {
+      const res = await axios.delete(
+        "https://gitbase.pythonanywhere.com" +
+          "/project/adminProjectAccess/" +
+          projectAccessId,
+        {
+          headers: {
+            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+          },
+        }
+      );
+      toast.success("Access revoked");
+
+      setUsers((prev) =>
+        prev.filter((u) => u.projectAccessId != projectAccessId)
+      );
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
   const fetchProjectAccess = async () => {
     if (!router.query.projectName) return;
 
@@ -88,6 +138,7 @@ export default function ProjectPage() {
 
     setUsers(
       res.data.map((user) => ({
+        projectAccessId: user.id,
         id: user.user_id.id,
         firstName: user.user_id.first_name,
         secondName: user.user_id.last_name,
@@ -99,12 +150,43 @@ export default function ProjectPage() {
     );
   };
 
+  const fetchProjectDetails = async () => {
+    if (!router.query.projectName) return;
+
+    const res = await axios.get(
+      "https://gitbase.pythonanywhere.com" + "/project/userProjectDetail",
+      {
+        params: { project_name: router.query.projectName },
+        headers: {
+          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+        },
+      }
+    );
+
+    setProjectDetails({
+      projectName: router.query.projectName,
+      projectId: res.data.id,
+      createdAt: res.data.created_at,
+      noOfRepos: res.data.repos_count,
+      noOfUsers: res.data.members_count,
+      description: res.data.project_description,
+      admin: {
+        userId: res.data.created_by.id,
+        photoUrl:
+          "https://gitbase.pythonanywhere.com" +
+          res.data.created_by.profile_pic,
+        userName: res.data.created_by.username,
+      },
+    });
+  };
+
   useEffect(() => {
     setDesc(projectDetails.description);
   }, [projectDetails]);
 
   useEffect(() => {
     fetchProjectAccess();
+    fetchProjectDetails();
   }, [router.query.projectName]);
 
   return (
@@ -128,7 +210,7 @@ export default function ProjectPage() {
                 <p className="font-bold text-4xl">{projectDetails.noOfRepos}</p>
               </div>
               <p className="text-gray-400 text-sm">
-                contains {projectDetails.noOfUsers} repos
+                contains {projectDetails.noOfRepos} repos
               </p>
             </div>
 
@@ -243,7 +325,9 @@ export default function ProjectPage() {
                 placeholder="Search users..."
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <AddUserToProjectModal />
+              <AddUserToProjectModal
+                refetchProjectAccess={fetchProjectAccess}
+              />
             </div>
             {users
               .filter(
@@ -293,16 +377,29 @@ export default function ProjectPage() {
                         tabIndex={0}
                         className="dropdown-content border-2 menu p-2 shadow-xl bg-base-100 rounded-box w-52"
                       >
-                        <li>
+                        <li
+                          onClick={() =>
+                            updateProjectAccess(user.projectAccessId, true)
+                          }
+                        >
                           <a>Manager {user.isManager && <TickIcon />}</a>
                         </li>
-                        <li>
+                        <li
+                          onClick={() =>
+                            updateProjectAccess(user.projectAccessId, false)
+                          }
+                        >
                           <a>Developer {!user.isManager && <TickIcon />}</a>
                         </li>
                       </ul>
                     </div>
 
-                    <button className="btn btn-error w-36">Remove User</button>
+                    <button
+                      onClick={() => removeProjectAccess(user.projectAccessId)}
+                      className="btn btn-error w-36"
+                    >
+                      Remove User
+                    </button>
                   </div>
                 </div>
               ))}

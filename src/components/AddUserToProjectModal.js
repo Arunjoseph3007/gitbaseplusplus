@@ -1,11 +1,14 @@
 import useDebounceEffect from "@/hooks/useDebounceEffect";
 import { PlusIcon } from "@/icons/plus";
 import axios from "axios";
+import { useRouter } from "next/router";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const KEY = "add-user-modal";
 
-export default function AddUserToProjectModal() {
+export default function AddUserToProjectModal({ refetchProjectAccess }) {
+  const { query } = useRouter();
   const [show, setShow] = useState(false);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
@@ -22,7 +25,28 @@ export default function AddUserToProjectModal() {
 
   const close = () => setShow(false);
 
-  const addMember = (role) => {
+  const addMember = async (isManager) => {
+    try {
+      const res = await axios.postForm(
+        "https://gitbase.pythonanywhere.com" + "/project/adminProjectAccess",
+        {
+          project_name: query.projectName,
+          user_id: selected.id,
+          is_manager: isManager,
+        },
+        {
+          headers: {
+            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+          },
+        }
+      );
+
+      toast.success("Access granted");
+      await refetchProjectAccess();
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+
     close();
   };
 
@@ -151,14 +175,14 @@ export default function AddUserToProjectModal() {
 
           <div className="flex gap-2 justify-end w-full mt-4">
             <button
-              onClick={() => addMember("developer")}
+              onClick={() => addMember(false)}
               disabled={!selected}
               className="btn"
             >
               Add as Developer
             </button>
             <button
-              onClick={() => addMember("manager")}
+              onClick={() => addMember(true)}
               disabled={!selected}
               className="btn btn-success"
             >
