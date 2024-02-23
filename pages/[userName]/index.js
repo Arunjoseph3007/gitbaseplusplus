@@ -1,7 +1,6 @@
 // @ Components
 import AllRepo from "@/components/AllRepo";
 import PinRepo from "@/components/PinRepo";
-import EditProfileModal from "@/components/EditProfileModal";
 import Navbar from "@/components/Navbar";
 // @ Icons
 import CircularStack from "@/icons/CircularStack";
@@ -71,17 +70,26 @@ export default function UserPage() {
       <div className="bg-base-200 flex flex-1 overflow-y-hidden flex-col md:flex-row">
         {/* //? SIDE-BAR */}
         <div className="md:w-[30%] bg-white pb-5">
-          <div className="flex justify-center mt-[2rem]">
+          {/* <div className="flex justify-center mt-[2rem]"> */}
             {/* //@ Create repo btn */}
-            {myUser?.userName === query.userName && (
+            {/* {myUser?.userName === query.userName && (
               <Link href="/new">
                 <a className="btn btn-sm md:btn-wide">Create New Repository</a>
               </Link>
-            )}
-          </div>
+            )} */}
+          {/* </div> */}
 
           {/* //@ User details */}
-          <div className="avatar flex justify-center mt-[2rem]">
+          <div className="flex flex-col mt-[1rem]">
+            <div className="flex justify-center text-4xl font-serif">
+              {isLogedin ? myUser?.firstName : user?.firstName}{" "}
+              {isLogedin ? myUser?.lastName : user?.lastName}
+            </div>
+            <div className="flex justify-center text-xl font-sans ">
+              {user?.userName}
+            </div>
+          </div>
+          <div className="avatar flex justify-center mt-[1rem]">
             <div className="w-[15rem] rounded-full overflow-hidden shadow-xl border border-base-300 ">
               <img
                 className="overflow-hidden opacity-90 "
@@ -89,31 +97,21 @@ export default function UserPage() {
               />
             </div>
           </div>
-          <div className="flex flex-col mt-6">
-            <div className="flex justify-center text-4xl font-serif">
-              {isLogedin ? myUser?.firstName : user?.firstName}{" "}
-              {isLogedin ? myUser?.lastName : user?.lastName}
+            <div className="flex flex-1 px-10 mt-2 font-light justify-center">
+             Bio Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deleniti culpa cupiditate praesentium facere modi deserunt mollitia maxime! Iusto, vero sed.
             </div>
-            <div className="flex justify-center text-xl font-sans">
-              {user?.userName}
-            </div>
-          </div>
-
           {/* //@ Edit profile btn */}
           {myUser?.userName === query.userName && (
             <>
+              <Link href={"/profile"}>
               <div className="flex justify-center mt-[2rem]">
                 <label
-                  htmlFor="my-modal"
                   className="btn btn-outline btn-sm md:btn-wide"
                 >
                   Edit Profile
                 </label>
               </div>
-              <input type="checkbox" id="my-modal" className="modal-toggle" />
-              <div className="modal">
-                <EditProfileModal />
-              </div>
+              </Link>
             </>
           )}
         </div>
