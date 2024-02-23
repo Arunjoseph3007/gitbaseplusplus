@@ -8,46 +8,45 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { format } from "timeago.js";
+import Dustbin from "@/icons/dustbin";
 
 export default function Users() {
-  const [userMode,setUserMode] = useState("All Users")
-  const [userDetails,setUserDetails] = useState([])
-  const [allUserDetails,setAllUserDetails] = useState([])
-  
-  useEffect(()=>{
-      const elem = document.activeElement;
-      if(elem){
-        elem?.blur();
-      }
-      if(userMode == "Managers"){
-        Managers();
-      }
-      else if(userMode == "Admins"){
-        Admins();
-      }
-      else{
-        AllUsers();
-      }
-  },[userMode]);
+  const [userMode, setUserMode] = useState("All Users");
+  const [userDetails, setUserDetails] = useState([]);
+  const [allUserDetails, setAllUserDetails] = useState([]);
+
+  useEffect(() => {
+    const elem = document.activeElement;
+    if (elem) {
+      elem?.blur();
+    }
+    if (userMode == "Managers") {
+      Managers();
+    } else if (userMode == "Admins") {
+      Admins();
+    } else {
+      AllUsers();
+    }
+  }, [userMode]);
 
   useEffect(() => {
     fetchUsers();
   }, []);
-  const convertToUserFormat = (allUsers) =>{
+  const convertToUserFormat = (allUsers) => {
     const users = allUsers.map((user) => ({
       id: user.username,
       firstName: user.first_name,
       secondName: user.last_name,
       email: user.email,
       userName: user.username,
-      image: "https://gitbase.pythonanywhere.com" +user.profile_pic,
-      isManager:user.is_manager,
-      isAdmin:user.is_creator,
+      image: "https://gitbase.pythonanywhere.com" + user.profile_pic,
+      isManager: user.is_manager,
+      isAdmin: user.is_creator,
       currentproject: "adminpannel",
       noOfYears: user.date_joined,
     }));
-    return users
-  }
+    return users;
+  };
 
   async function fetchUsers() {
     try {
@@ -67,15 +66,23 @@ export default function Users() {
       toast.error("Something Went Wrong");
     }
   }
-  const AllUsers = () =>{
-    setUserDetails(allUserDetails)
-  }
-  const Managers = () =>{
-    setUserDetails(allUserDetails.filter((user)=>{return user.isManager}))
-  }
-  const Admins = () =>{
-    setUserDetails(allUserDetails.filter((user)=>{return user.isAdmin}));
-  }
+  const AllUsers = () => {
+    setUserDetails(allUserDetails);
+  };
+  const Managers = () => {
+    setUserDetails(
+      allUserDetails.filter((user) => {
+        return user.isManager;
+      })
+    );
+  };
+  const Admins = () => {
+    setUserDetails(
+      allUserDetails.filter((user) => {
+        return user.isAdmin;
+      })
+    );
+  };
 
   return (
     <div>
@@ -101,13 +108,17 @@ export default function Users() {
           </svg>
           <ul className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
             <li>
-              <button onClick={()=>setUserMode("All Users")}>All Users</button>
+              <button onClick={() => setUserMode("All Users")}>
+                All Users
+              </button>
             </li>
             <li>
-              <button onClick={()=>setUserMode("Managers")}>Managers Only</button>
+              <button onClick={() => setUserMode("Managers")}>
+                Managers Only
+              </button>
             </li>
             <li>
-              <button onClick={()=>setUserMode("Admins")}>Admin Only</button>
+              <button onClick={() => setUserMode("Admins")}>Admin Only</button>
             </li>
           </ul>
         </div>
@@ -127,20 +138,24 @@ export default function Users() {
               key={user.userName}
             >
               <div className="w-[10%]">
-                <img
-                  src={user.image}
-                  alt={user.userName}
-                  className="h-[80px] aspect-square rounded-full object-cover"
-                />
+                <Link href="/admin">
+                  <img
+                    src={user.image}
+                    alt={user.userName}
+                    className="h-[80px] aspect-square rounded-full object-cover hover:cursor-pointer"
+                  />
+                </Link>
               </div>
               <div className="flex-1 flex justify-between w-[30%]">
                 <div className="flex flex-col gap-1 ml-5">
-                  <div className="flex gap-2 items-center">
-                    <Details />
-                    <h6 className="text-lg font-medium">{user.firstName}</h6>
-                    <h6 className="text-lg font-medium">{user.secondName}</h6>
-                  </div>
-                  <div className="flex gap-2">
+                  <Link href="/admin">
+                    <div className="flex gap-2 items-center hover:cursor-pointer">
+                      <Details />
+                      <h6 className="text-lg font-medium">{user.firstName}</h6>
+                      <h6 className="text-lg font-medium">{user.secondName}</h6>
+                    </div>
+                  </Link>
+                  <div className="flex gap-2 ">
                     <UserName />
                     {user.userName}
                   </div>
@@ -153,23 +168,54 @@ export default function Users() {
                 <div className="flex w-[40%] justify-start">
                   <div className="flex flex-col   justify-evenly ">
                     <div className="flex gap-2 items-center justify-start">
-                      <div className=" badge badge-primary ">CurrentProject</div>
+                      <div className=" badge badge-primary ">
+                        CurrentProject
+                      </div>
                       <div>{user.currentproject}</div>
                     </div>
                     <div>
-                    <div className="flex gap-2 items-center justify-start">
-                      <div className=" badge  ">Experience</div>
-                      <div>{format(user.noOfYears)}</div>
-                    </div>
+                      <div className="flex gap-2 items-center justify-start">
+                        <div className=" badge  ">Experience</div>
+                        <div>{format(user.noOfYears)}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <Link href="/admin">
-                <div className="w-[5%] hover:cursor-pointer">
-                  <Chevron />
+              <div className="w-[5%]  form-control">
+                <label htmlFor="remove" className=" flex-1 hover:cursor-pointer">
+                  <Dustbin />
+                </label>
+              </div>
+              <input type="checkbox" id="remove" className="modal-toggle" />
+              <div className="modal">
+                <div className="modal-box">
+                  <h3 className="font-bold text-lg">Remove User</h3>
+                  <p className="py-4">
+                    Are you sure, you want to remove this user?
+                  </p>
+                  <div className="flex justify-center gap-12">
+                    <div className="modal-action flex justify-center">
+                      <label
+                        htmlFor="remove"
+                        className="btn btn-primary w-[8rem] "
+                        onClick={()=>{}}
+                      >
+                        Yes
+                      </label>
+                    </div>
+                    <div className="modal-action flex justify-center">
+                      <label
+                        htmlFor="remove"
+                        className="btn btn-secondary w-[8rem]  "
+                        onClick={() => {}}
+                      >
+                        No
+                      </label>
+                    </div>
+                  </div>
                 </div>
-              </Link>
+              </div>
             </div>
           </div>
         ))}
