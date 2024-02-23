@@ -211,7 +211,7 @@ export default function Adduser() {
                   <label
                     htmlFor="my-alert"
                     className="btn btn-secondary w-[8rem]  "
-                    onClick={addUser}
+                    onClick={()=>{}}
                   >
                     No
                   </label>
