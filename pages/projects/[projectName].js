@@ -73,6 +73,33 @@ export default function ProjectPage() {
     }
   };
 
+  const updateProjectAccess = async (projectAccessId,isManager) => {
+    
+  };
+
+  const removeProjectAccess = async (projectAccessId) => {
+    if (!router.query.projectName) return;
+    try {
+      const res = await axios.delete(
+        "https://gitbase.pythonanywhere.com" +
+          "/project/adminProjectAccess/" +
+          projectAccessId,
+        {
+          headers: {
+            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+          },
+        }
+      );
+      toast.success("Access revoked");
+
+      setUsers((prev) =>
+        prev.filter((u) => u.projectAccessId != projectAccessId)
+      );
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+  };
+
   const fetchProjectAccess = async () => {
     if (!router.query.projectName) return;
 
@@ -88,6 +115,7 @@ export default function ProjectPage() {
 
     setUsers(
       res.data.map((user) => ({
+        projectAccessId: user.id,
         id: user.user_id.id,
         firstName: user.user_id.first_name,
         secondName: user.user_id.last_name,
@@ -99,12 +127,41 @@ export default function ProjectPage() {
     );
   };
 
+  const fetchProjectDetails = async () => {
+    if (!router.query.projectName) return;
+
+    const res = await axios.get(
+      "https://gitbase.pythonanywhere.com" + "/project/userProjectDetail",
+      {
+        params: { project_name: router.query.projectName },
+        headers: {
+          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+        },
+      }
+    );
+
+    setProjectDetails({
+      projectName: router.query.projectName,
+      projectId: res.data.id,
+      createdAt: res.data.created_at,
+      noOfRepos: res.data.repos_count,
+      noOfUsers: res.data.members_count,
+      description: res.data.project_description,
+      admin: {
+        userId: 12,
+        photoUrl: "https://picsum.photos/200",
+        userName: "Admin 2",
+      },
+    });
+  };
+
   useEffect(() => {
     setDesc(projectDetails.description);
   }, [projectDetails]);
 
   useEffect(() => {
     fetchProjectAccess();
+    fetchProjectDetails();
   }, [router.query.projectName]);
 
   return (
@@ -302,7 +359,12 @@ export default function ProjectPage() {
                       </ul>
                     </div>
 
-                    <button className="btn btn-error w-36">Remove User</button>
+                    <button
+                      onClick={() => removeProjectAccess(user.projectAccessId)}
+                      className="btn btn-error w-36"
+                    >
+                      Remove User
+                    </button>
                   </div>
                 </div>
               ))}
