@@ -52,7 +52,7 @@ export default function ProjectPage() {
 
   const editDesc = async () => {
     try {
-      const res = await axios.put(
+      const res = await axios.putForm(
         "https://gitbase.pythonanywhere.com" +
           "/project/adminProjectUpdate/" +
           projectDetails.projectId,
