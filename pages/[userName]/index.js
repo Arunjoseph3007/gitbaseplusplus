@@ -1,7 +1,6 @@
 // @ Components
 import AllRepo from "@/components/AllRepo";
 import PinRepo from "@/components/PinRepo";
-import EditProfileModal from "@/components/EditProfileModal";
 import Navbar from "@/components/Navbar";
 // @ Icons
 import CircularStack from "@/icons/CircularStack";
