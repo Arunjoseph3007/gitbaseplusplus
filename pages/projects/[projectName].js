@@ -21,16 +21,15 @@ export default function ProjectPage() {
   const [search, setSearch] = useState("");
   const [projectDetails, setProjectDetails] = useState({
     projectName: router.query.projectName,
-    projectId: 3,
+    projectId: 0,
     createdAt: new Date().toDateString(),
-    noOfRepos: 12,
-    noOfUsers: 16,
-    description:
-      "A very very long description. A very very long description. A very very long description. A very very long description. ",
+    noOfRepos: 0,
+    noOfUsers: 0,
+    description: "",
     admin: {
-      userId: 12,
-      photoUrl: "https://picsum.photos/200",
-      userName: "Admin 2",
+      userId: 0,
+      photoUrl: "https://gitbase.pythonanywhere.com" + "/media/default.png",
+      userName: "",
     },
   });
   const [users, setUsers] = useState([]);
@@ -73,12 +72,36 @@ export default function ProjectPage() {
     }
   };
 
-  const updateProjectAccess = async (projectAccessId,isManager) => {
-    
+  const updateProjectAccess = async (projectAccessId, isManager) => {
+    if (!router.query.projectName) return;
+
+    try {
+      const res = await axios.putForm(
+        "https://gitbase.pythonanywhere.com" +
+          "/project/adminProjectAccess/" +
+          projectAccessId,
+        { is_manager: isManager },
+        {
+          headers: {
+            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+          },
+        }
+      );
+      toast.success("Access updated");
+
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.projectAccessId == projectAccessId ? { ...u, isManager } : u
+        )
+      );
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
 
   const removeProjectAccess = async (projectAccessId) => {
     if (!router.query.projectName) return;
+
     try {
       const res = await axios.delete(
         "https://gitbase.pythonanywhere.com" +
@@ -148,9 +171,11 @@ export default function ProjectPage() {
       noOfUsers: res.data.members_count,
       description: res.data.project_description,
       admin: {
-        userId: 12,
-        photoUrl: "https://picsum.photos/200",
-        userName: "Admin 2",
+        userId: res.data.created_by.id,
+        photoUrl:
+          "https://gitbase.pythonanywhere.com" +
+          res.data.created_by.profile_pic,
+        userName: res.data.created_by.username,
       },
     });
   };
@@ -185,7 +210,7 @@ export default function ProjectPage() {
                 <p className="font-bold text-4xl">{projectDetails.noOfRepos}</p>
               </div>
               <p className="text-gray-400 text-sm">
-                contains {projectDetails.noOfUsers} repos
+                contains {projectDetails.noOfRepos} repos
               </p>
             </div>
 
@@ -300,7 +325,9 @@ export default function ProjectPage() {
                 placeholder="Search users..."
                 onChange={(e) => setSearch(e.target.value)}
               />
-              <AddUserToProjectModal />
+              <AddUserToProjectModal
+                refetchProjectAccess={fetchProjectAccess}
+              />
             </div>
             {users
               .filter(
@@ -350,10 +377,18 @@ export default function ProjectPage() {
                         tabIndex={0}
                         className="dropdown-content border-2 menu p-2 shadow-xl bg-base-100 rounded-box w-52"
                       >
-                        <li>
+                        <li
+                          onClick={() =>
+                            updateProjectAccess(user.projectAccessId, true)
+                          }
+                        >
                           <a>Manager {user.isManager && <TickIcon />}</a>
                         </li>
-                        <li>
+                        <li
+                          onClick={() =>
+                            updateProjectAccess(user.projectAccessId, false)
+                          }
+                        >
                           <a>Developer {!user.isManager && <TickIcon />}</a>
                         </li>
                       </ul>

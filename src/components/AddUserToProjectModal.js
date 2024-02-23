@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const KEY = "add-user-modal";
 
-export default function AddUserToProjectModal() {
+export default function AddUserToProjectModal({ refetchProjectAccess }) {
   const { query } = useRouter();
   const [show, setShow] = useState(false);
   const [search, setSearch] = useState("");
@@ -42,6 +42,7 @@ export default function AddUserToProjectModal() {
       );
 
       toast.success("Access granted");
+      await refetchProjectAccess();
     } catch (error) {
       toast.error("Something went wrong");
     }
