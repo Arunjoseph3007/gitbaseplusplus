@@ -33,22 +33,7 @@ export default function ProjectPage() {
     },
   });
   const [users, setUsers] = useState([]);
-  const [repos, setRepos] = useState(
-    new Array(7).fill(0).map((_, i) => ({
-      id: i,
-      project: "Project00",
-      name: "Repo " + i,
-      createdAt: new Date().toDateString(),
-      description:
-        "Repo description goes here Repo description goes here. Repo description goes here Repo description goes here.",
-      noOfUsers: 16,
-      createdBy: {
-        userId: i + 12,
-        photoUrl: "https://picsum.photos/200?random=" + i,
-        userName: "Manager" + (i + 12).toString(),
-      },
-    }))
-  );
+  const [repos, setRepos] = useState([]);
 
   const editDesc = async () => {
     try {
@@ -59,7 +44,7 @@ export default function ProjectPage() {
         { project_description: desc },
         {
           headers: {
-            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
           },
         }
       );
@@ -83,7 +68,7 @@ export default function ProjectPage() {
         { is_manager: isManager },
         {
           headers: {
-            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
           },
         }
       );
@@ -109,7 +94,7 @@ export default function ProjectPage() {
           projectAccessId,
         {
           headers: {
-            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
+            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
           },
         }
       );
@@ -131,7 +116,7 @@ export default function ProjectPage() {
       {
         params: { project_name: router.query.projectName },
         headers: {
-          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
         },
       }
     );
@@ -150,6 +135,37 @@ export default function ProjectPage() {
     );
   };
 
+  const fetchRepos = async () => {
+    if (!router.query.projectName) return;
+
+    const res = await axios.get(
+      "https://gitbase.pythonanywhere.com" + "/project/projectRepository",
+      {
+        params: { project_name: router.query.projectName },
+        headers: {
+          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
+        },
+      }
+    );
+
+    setRepos(
+      res.data.map((repo) => ({
+        id: repo.id,
+        project: repo.project_id.project_name,
+        name: repo.repo_name,
+        createdAt: repo.created_at,
+        description: repo.repo_description,
+        noOfUsers: repo.contributors_count,
+        createdBy: {
+          userId: repo.created_by.id,
+          photoUrl:
+            "https://gitbase.pythonanywhere.com" + repo.created_by.profile_pic,
+          userName: repo.created_by.username,
+        },
+      }))
+    );
+  };
+
   const fetchProjectDetails = async () => {
     if (!router.query.projectName) return;
 
@@ -158,7 +174,7 @@ export default function ProjectPage() {
       {
         params: { project_name: router.query.projectName },
         headers: {
-          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
         },
       }
     );
@@ -187,6 +203,7 @@ export default function ProjectPage() {
   useEffect(() => {
     fetchProjectAccess();
     fetchProjectDetails();
+    fetchRepos();
   }, [router.query.projectName]);
 
   return (

@@ -1,31 +1,45 @@
-// @ Components
-import AllRepo from "@/components/AllRepo";
-import PinRepo from "@/components/PinRepo";
 import Navbar from "@/components/Navbar";
-// @ Icons
-import CircularStack from "@/icons/CircularStack";
-import { DocumentIcon } from "@/icons/documents";
-
 import Link from "next/link";
 import axios from "@/libs/axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useUser } from "@/context/userContext";
-import { toast } from "react-toastify";
+import { format } from "timeago.js";
+import { CollaboratorsIcon } from "@/icons/collaborators";
+import { BranchIcon } from "@/icons/branch";
 
 export default function UserPage() {
-  const [active, setActive] = useState(true);
-  const [repos, setRepos] = useState([]);
+  const [projects, setProjects] = useState(
+    new Array(2).fill(0).map((_, id) => ({
+      id,
+      name: "Project " + id,
+      createdAt: new Date().toDateString(),
+      description:
+        "Description. Description. Description. Description. Description. Description. Description. Description. ",
+      noOfRepos: 2,
+      noOfUsers: 10,
+    }))
+  );
+  const [repos, setRepos] = useState(
+    new Array(2).fill(0).map((_, id) => ({
+      id,
+      project: "Project 4",
+      name: "Repo " + id,
+      createdAt: new Date().toDateString(),
+      description:
+        "Description. Description. Description. Description. Description. Description. Description. Description. ",
+      noOfUsers: 10,
+      createdBy: {
+        userId: "User " + id,
+        userName: "creator",
+        photoUrl: "https://gitbase.pythonanywhere.com" + "/media/default.png",
+      },
+    }))
+  );
   const [user, setUser] = useState();
   const { query } = useRouter();
   const { user: myUser } = useUser();
   const isLogedin = myUser?.userName == user?.userName;
-  function onPinClick() {
-    setActive(true);
-  }
-  function onAllClick() {
-    setActive(false);
-  }
 
   async function fetchDetails() {
     try {
@@ -56,10 +70,12 @@ export default function UserPage() {
       });
     } catch (e) {
       console.log(e);
-      toast.error("Something Went Wrong");
     }
   }
-  useEffect(()=>{fetchDetails()}, [query.userName]);
+
+  useEffect(() => {
+    fetchDetails();
+  }, [query.userName]);
 
   return (
     <div className="md:h-screen flex flex-col">
@@ -70,15 +86,6 @@ export default function UserPage() {
       <div className="bg-base-200 flex flex-1 overflow-y-hidden flex-col md:flex-row">
         {/* //? SIDE-BAR */}
         <div className="md:w-[30%] bg-white pb-5">
-          {/* <div className="flex justify-center mt-[2rem]"> */}
-            {/* //@ Create repo btn */}
-            {/* {myUser?.userName === query.userName && (
-              <Link href="/new">
-                <a className="btn btn-sm md:btn-wide">Create New Repository</a>
-              </Link>
-            )} */}
-          {/* </div> */}
-
           {/* //@ User details */}
           <div className="flex flex-col mt-[1rem]">
             <div className="flex justify-center text-4xl font-serif">
@@ -97,54 +104,117 @@ export default function UserPage() {
               />
             </div>
           </div>
-            <div className="flex flex-1 px-10 mt-2 font-light justify-center">
-             Bio Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deleniti culpa cupiditate praesentium facere modi deserunt mollitia maxime! Iusto, vero sed.
-            </div>
+          <div className="flex flex-1 px-10 mt-2 font-light justify-center text-center">
+            Bio Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+            Deleniti culpa cupiditate praesentium facere modi deserunt mollitia
+            maxime! Iusto, vero sed.
+          </div>
           {/* //@ Edit profile btn */}
           {myUser?.userName === query.userName && (
-            <>
-              <Link href={"/profile"}>
+            <Link href={"/profile"}>
               <div className="flex justify-center mt-[2rem]">
-                <label
-                  className="btn btn-outline btn-sm md:btn-wide"
-                >
+                <label className="btn btn-outline btn-sm md:btn-wide">
                   Edit Profile
                 </label>
               </div>
-              </Link>
-            </>
+            </Link>
           )}
         </div>
 
         {/* //? MAIN WINDOW  (Right) */}
-        <div className="md:w-[70%] flex flex-col flex-1 mb-[7rem] px-2">
-          <div className="flex-1">
-            {active ? (
-              <PinRepo
-                repos={repos.filter((r) => r.is_pinned)}
-                allRepos={repos}
-              />
-            ) : (
-              <AllRepo repos={repos} />
-            )}
+        <div className="md:w-[70%] flex flex-col flex-1 px-2 overflow-y-scroll">
+          {/* Projects */}
+          <div className="px-8 my-4">
+            <div className="flex items-center justify-between">
+              <p className="text-xl font-semibold">Recent Project</p>
+              {myUser?.userName === query.userName && (
+                <Link href="/projects">
+                  <button className="btn btn-sm">All projects</button>
+                </Link>
+              )}
+            </div>
+            <div className="h-[2px] w-full my-2 bg-gray-300" />
+            {projects.map((project) => (
+              <div
+                className="bg-white my-1 flex flex-1 items-center justify-between gap-4 p-3 border shadow rounded-md basis-[450px]"
+                key={project.id}
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-lg font-medium">
+                      <Link href={"/" + project.name}>{project.name}</Link>
+                    </h3>
+                    <div className="w-[6px] aspect-square rounded-full bg-gray-300"></div>
+                    <p className="text-gray-400 text-sm">
+                      created {format(project.createdAt)}
+                    </p>
+                  </div>
+                  <p className="max-w-[650px] text-gray-600 font-light text-sm">
+                    {project.description}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center text-xs [&_svg]:h-4">
+                    <CollaboratorsIcon /> <p>{project.noOfUsers} members</p>
+                  </div>
+                  <div className="flex items-center text-xs [&_svg]:h-3">
+                    <BranchIcon /> <p>{project.noOfRepos} repos</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          {/* //@ Bottom tabs */}
-          <div className="btm-nav md:w-[70%] left-auto">
-            <button
-              className={`${active ? "active" : ""}`}
-              onClick={onPinClick}
-            >
-              <DocumentIcon />
-              <span className="btm-nav-label">Popular Repositories</span>
-            </button>
-            <button
-              className={`${active ? "" : "active"}`}
-              onClick={onAllClick}
-            >
-              <CircularStack />
-              <span className="btm-nav-label">All Repositories</span>
-            </button>
+          {/* Repos */}
+          <div className="px-8 my-4">
+            <div className="flex items-center justify-between">
+              <p className="text-xl font-semibold">Recent Repositories</p>
+              {myUser?.userName === query.userName && (
+                <Link href="/repos">
+                  <button className="btn btn-sm">All Repos</button>
+                </Link>
+              )}
+            </div>
+            <div className="h-[2px] w-full my-2 bg-gray-300" />
+            {repos.map((repo) => (
+              <div
+                className="bg-white flex justify-between gap-3 p-3 my-2 border shadow rounded-md"
+                key={repo.id}
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="text-lg font-medium underline">
+                      {repo.project}/{repo.name}
+                    </h3>
+                    <div className="w-[6px] aspect-square rounded-full bg-gray-300" />
+                    <p className="text-gray-400 text-sm">
+                      {format(repo.createdAt)}
+                    </p>
+                  </div>
+                  <p className="max-w-[650px] text-gray-600 font-light text-sm">
+                    {repo.description}
+                  </p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <img
+                      src={repo.createdBy.photoUrl}
+                      alt={repo.createdBy.userName}
+                      className="w-6 aspect-square object-contain rounded-full"
+                    />
+                    <p className="text-gray-400 text-sm">
+                      <span className="cursor-pointer hover:underline">
+                        {repo.createdBy.userName}
+                      </span>{" "}
+                      created this repo
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center text-xs [&_svg]:h-4">
+                    <CollaboratorsIcon /> <p>{repo.noOfUsers} collaborators</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -154,10 +224,8 @@ export default function UserPage() {
 
 export const getServerSideProps = async (ctx) => {
   try {
-    
     return {
-      props: {
-      },
+      props: {},
     };
   } catch (error) {
     return {
