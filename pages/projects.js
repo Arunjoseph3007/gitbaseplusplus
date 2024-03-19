@@ -15,7 +15,7 @@ export default function ProjectsPage() {
         "https://gitbase.pythonanywhere.com" + "/project/userProject",
         {
           headers: {
-            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+            Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
           },
         }
       );
