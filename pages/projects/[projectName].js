@@ -44,7 +44,7 @@ export default function ProjectPage() {
         { project_description: desc },
         {
           headers: {
-            Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
+            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
           },
         }
       );
@@ -68,7 +68,7 @@ export default function ProjectPage() {
         { is_manager: isManager },
         {
           headers: {
-            Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
+            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
           },
         }
       );
@@ -94,7 +94,7 @@ export default function ProjectPage() {
           projectAccessId,
         {
           headers: {
-            Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
+            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
           },
         }
       );
@@ -116,7 +116,7 @@ export default function ProjectPage() {
       {
         params: { project_name: router.query.projectName },
         headers: {
-          Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
+          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
         },
       }
     );
@@ -143,7 +143,7 @@ export default function ProjectPage() {
       {
         params: { project_name: router.query.projectName },
         headers: {
-          Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
+          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
         },
       }
     );
@@ -174,7 +174,7 @@ export default function ProjectPage() {
       {
         params: { project_name: router.query.projectName },
         headers: {
-          Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
+          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
         },
       }
     );
