@@ -14,7 +14,6 @@ export default function Users() {
   const [userMode, setUserMode] = useState("All Users");
   const [userDetails, setUserDetails] = useState([]);
   const [allUserDetails, setAllUserDetails] = useState([]);
-
   useEffect(() => {
     const elem = document.activeElement;
     if (elem) {
@@ -48,6 +47,8 @@ export default function Users() {
     return users;
   };
 
+
+
   async function fetchUsers() {
     try {
       let config = {
@@ -61,6 +62,27 @@ export default function Users() {
       );
       setUserDetails(convertToUserFormat(allUsers.data));
       setAllUserDetails(convertToUserFormat(allUsers.data));
+    } catch (e) {
+      console.log(e);
+      toast.error("Something Went Wrong");
+    }
+  }
+  async function removeUsers(userName) {
+    try {
+      let config = {
+        headers: {
+          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
+        },
+        params:{
+          username: userName,
+        }
+      };
+      const allUsers = await axios.delete(
+        "https://gitbase.pythonanywhere.com" + "/accounts/register",
+        config
+      );
+      fetchUsers()
+      toast.success("User has been Removed!");
     } catch (e) {
       console.log(e);
       toast.error("Something Went Wrong");
@@ -132,10 +154,9 @@ export default function Users() {
 
       <div>
         {userDetails.map((user) => (
-          <div className="flex justify-center">
+          <div className="flex justify-center" key={user.userName}>
             <div
               className="flex items-center justify-between w-[80%] gap-3 p-3 my-3 mt-5 border shadow rounded-full"
-              key={user.userName}
             >
               <div className="w-[10%]">
                 <Link href="/admin">
@@ -183,11 +204,11 @@ export default function Users() {
                 </div>
               </div>
               <div className="w-[5%]  form-control">
-                <label htmlFor="remove" className=" flex-1 hover:cursor-pointer">
+                <label htmlFor={`remove-${user.userName}`} className=" flex-1 hover:cursor-pointer">
                   <Dustbin />
                 </label>
               </div>
-              <input type="checkbox" id="remove" className="modal-toggle" />
+              <input type="checkbox"  id={`remove-${user.userName}`} className="modal-toggle" />
               <div className="modal">
                 <div className="modal-box">
                   <h3 className="font-bold text-lg">Remove User</h3>
@@ -197,16 +218,16 @@ export default function Users() {
                   <div className="flex justify-center gap-12">
                     <div className="modal-action flex justify-center">
                       <label
-                        htmlFor="remove"
+                        htmlFor={`remove-${user.userName}`}
                         className="btn btn-primary w-[8rem] "
-                        onClick={()=>{}}
+                        onClick={()=>{removeUsers(user.userName);}}
                       >
                         Yes
                       </label>
                     </div>
                     <div className="modal-action flex justify-center">
                       <label
-                        htmlFor="remove"
+                        htmlFor={`remove-${user.userName}`}
                         className="btn btn-secondary w-[8rem]  "
                         onClick={() => {}}
                       >
