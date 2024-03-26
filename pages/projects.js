@@ -1,7 +1,7 @@
 import { BranchIcon } from "@/icons/branch";
 import { CollaboratorsIcon } from "@/icons/collaborators";
 import UserLayout from "@/layouts/UserLayout";
-import axios from "axios";
+import axios from "@/libs/axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { format } from "timeago.js";
@@ -11,14 +11,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      const res = await axios.get(
-        "https://gitbase.pythonanywhere.com" + "/project/userProject",
-        {
-          headers: {
-            Authorization: "Token 2928b06fbb39c2c0141b13763d11116538c314a6",
-          },
-        }
-      );
+      const res = await axios.get("/project/userProject");
 
       setProjects(
         res.data.map((proj) => ({

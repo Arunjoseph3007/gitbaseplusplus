@@ -1,6 +1,6 @@
 import useDebounceEffect from "@/hooks/useDebounceEffect";
 import { PlusIcon } from "@/icons/plus";
-import axios from "axios";
+import axios from "@/libs/axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -27,19 +27,11 @@ export default function AddUserToProjectModal({ refetchProjectAccess }) {
 
   const addMember = async (isManager) => {
     try {
-      const res = await axios.postForm(
-        "https://gitbase.pythonanywhere.com" + "/project/adminProjectAccess",
-        {
-          project_name: query.projectName,
-          user_id: selected.id,
-          is_manager: isManager,
-        },
-        {
-          headers: {
-            Authorization: "Token 1322573273c81de1981522e7324837111d60c740",
-          },
-        }
-      );
+      const res = await axios.post("/project/adminProjectAccess", {
+        project_name: query.projectName,
+        user_id: selected.id,
+        is_manager: isManager,
+      });
 
       toast.success("Access granted");
       await refetchProjectAccess();
@@ -56,15 +48,9 @@ export default function AddUserToProjectModal({ refetchProjectAccess }) {
       return;
     }
 
-    const res = await axios.get(
-      "https://gitbase.pythonanywhere.com" + "/accounts/userSearch",
-      {
-        params: { keyword: search },
-        headers: {
-          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-        },
-      }
-    );
+    const res = await axios.get("/accounts/userSearch", {
+      params: { keyword: search },
+    });
 
     setUserRes(
       res.data.map((user) => ({

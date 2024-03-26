@@ -2,7 +2,7 @@ import { BranchIcon } from "@/icons/branch";
 import { CollaboratorsIcon } from "@/icons/collaborators";
 import { PlusIcon } from "@/icons/plus";
 import AdminLayout from "@/layouts/AdminLayout";
-import axios from "axios";
+import axios from "@/libs/axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -30,20 +30,12 @@ export default function AdminProjects() {
       return;
     }
     try {
-      const res = await axios.post(
-        "https://gitbase.pythonanywhere.com" + "/project/adminProject",
-        {
-          project_name: createProjectDetails.project_name,
-          project_description: createProjectDetails.project_desc,
-        },
-        {
-          headers: {
-            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-          },
-        }
-      );
+      const res = await axios.post("/project/adminProject", {
+        project_name: createProjectDetails.project_name,
+        project_description: createProjectDetails.project_desc,
+      });
       toast.success("Project created successfully");
-      fetchProjects()
+      fetchProjects();
       setCreateProjectDetails({ project_name: "", project_desc: "" });
     } catch (error) {
       toast.error("Couldn't create Project");
@@ -51,15 +43,7 @@ export default function AdminProjects() {
   };
   async function fetchProjects() {
     try {
-      let config = {
-        headers: {
-          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-        },
-      };
-      const allProjects = await axios.get(
-        "https://gitbase.pythonanywhere.com" + "/project/adminProject",
-        config
-      );
+      const allProjects = await axios.get("/project/adminProject");
       setProjects(allProjects.data);
     } catch (e) {
       console.log(e);
@@ -155,11 +139,13 @@ export default function AdminProjects() {
           <div
             className="flex flex-1 items-center justify-between gap-4 p-3 border shadow rounded-md basis-[450px]"
             key={project.project_name}
-            >
+          >
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-medium">
-                  <Link href={"/projects/" + project.project_name}>{project.project_name}</Link>
+                  <Link href={"/projects/" + project.project_name}>
+                    {project.project_name}
+                  </Link>
                 </h3>
                 <div className="w-[6px] aspect-square rounded-full bg-gray-300"></div>
                 <p className="text-gray-400 text-sm">

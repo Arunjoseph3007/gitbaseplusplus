@@ -1,6 +1,6 @@
 import { CollaboratorsIcon } from "@/icons/collaborators";
 import UserLayout from "@/layouts/UserLayout";
-import axios from "axios";
+import axios from "@/libs/axios";
 import { useEffect, useState } from "react";
 import { format } from "timeago.js";
 
@@ -9,14 +9,7 @@ export default function ReposPage() {
 
   useEffect(() => {
     const fetchRepos = async () => {
-      const res = await axios.get(
-        "https://gitbase.pythonanywhere.com" + "/repository/userRepos",
-        {
-          headers: {
-            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-          },
-        }
-      );
+      const res = await axios.get("/repository/userRepos");
 
       setRepos(
         res.data.map((repo) => ({
