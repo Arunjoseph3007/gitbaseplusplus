@@ -19,7 +19,7 @@ export default function AuthProvider({ children }) {
     }
 
     try {
-      const { data } = await axios.get("/accounts/MyUser/" + userId + "/");
+      const { data } = await axios.get("/accounts/MyUser");
       setUser({
         userName: data.username,
         firstName: data.first_name,
@@ -40,9 +40,9 @@ export default function AuthProvider({ children }) {
       localStorage.removeItem('token')
       const res = await axios.post(`/accounts/login`, { email, password });
       setUser(res.data);
-
+      console.log(res.data);
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("id", res.data.user_id);
+      localStorage.setItem("id", res.data.id);
 
       toast.success("Login Successfull");
 

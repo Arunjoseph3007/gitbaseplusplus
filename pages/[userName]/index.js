@@ -45,7 +45,7 @@ export default function UserPage() {
     try {
       const userName = query.userName;
       const repoRes = await axios.get(
-        `/main/getuserrepos?username=${userName}`
+        `/repository/userRepos?username=${userName}`
       );
 
       if (!repoRes.data.UserDetails) return { notFound: true };
@@ -53,11 +53,11 @@ export default function UserPage() {
       const repos = repoRes.data.RepoDetails.map((repo) => ({
         name: repo.repo_name,
         id: repo.repo_id,
-        isPublic: repo.is_public,
+        isPublic: true,
         createdAt: repo.date_of_creation,
-        is_pinned: repo.is_pinned,
-        is_forked: repo.is_forked,
-        stars: repo.stars,
+        is_pinned: false,
+        is_forked: false,
+        stars: 2,
       }));
       const user = repoRes.data.UserDetails;
       setRepos(repos);
@@ -66,6 +66,7 @@ export default function UserPage() {
         lastName: user.last_name,
         firstName: user.first_name,
         email: user.email,
+        bio:user.bio,
         photoUrl: process.env.NEXT_PUBLIC_API + user.profile_pic,
       });
     } catch (e) {
@@ -105,9 +106,7 @@ export default function UserPage() {
             </div>
           </div>
           <div className="flex flex-1 px-10 mt-2 font-light justify-center text-center">
-            Bio Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Deleniti culpa cupiditate praesentium facere modi deserunt mollitia
-            maxime! Iusto, vero sed.
+            {user?.bio}
           </div>
           {/* //@ Edit profile btn */}
           {myUser?.userName === query.userName && (

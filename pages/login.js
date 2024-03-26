@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useUser } from "@/context/userContext";
 
 export default function Login() {
-  const { setUser } = useUser();
+  const { user } = useUser();
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
@@ -21,8 +21,8 @@ export default function Login() {
     e.preventDefault();
 
     const data = await login(userDetails);
-
-    if (data.success) router.push("/" + data.username);
+    console.log(user)
+    if (data.success) router.push("/" + user.userName);
   };
 
   return (

@@ -25,7 +25,7 @@ export default function ProfilePage() {
 
     try {
       const res = await axios.patchForm(
-        `/accounts/MyUser/${localStorage.getItem("id")}/`,
+        `/accounts/MyUser`,
         {
           first_name: details.firstName,
           last_name: details.lastName,
