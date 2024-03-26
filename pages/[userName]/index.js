@@ -40,14 +40,14 @@ export default function UserPage() {
   const { query } = useRouter();
   const { user: myUser } = useUser();
   const isLogedin = myUser?.userName == user?.userName;
-
+  console.log(isLogedin,myUser?.userName,user?.userName);
   async function fetchDetails() {
     try {
       const userName = query.userName;
       const repoRes = await axios.get(
-        `/repository/userRepos?username=${userName}`
+        `/repository/getUserRepos?username=${userName}`
       );
-
+      console.log("Here",repoRes.data)  
       if (!repoRes.data.UserDetails) return { notFound: true };
 
       const repos = repoRes.data.RepoDetails.map((repo) => ({
@@ -61,6 +61,7 @@ export default function UserPage() {
       }));
       const user = repoRes.data.UserDetails;
       setRepos(repos);
+      console.log(user)
       setUser({
         userName: user.username,
         lastName: user.last_name,
