@@ -83,15 +83,6 @@ export default function Login() {
                 Login
               </button>
             </div>
-            <div className="divider my-[0.5rem] md:my-[1rem]">OR</div>
-            <div className="mt-1">
-              New to GitBase?{" "}
-              <Link href="/signup">
-                <a className="link link-hover" style={{ color: "blue" }}>
-                  Create an account
-                </a>
-              </Link>
-            </div>
           </form>
         </div>
       </div>

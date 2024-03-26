@@ -39,7 +39,7 @@ export default function Home() {
             Want a database for your repositories!
           </p>
           <p className="mb-2 md:-mt-[1rem] opacity-80 md:text-[1rem] " >  You Landed at your Goal.</p>
-          <Link href={"/signup"}>
+          <Link href={"/login"}>
             <button className="btn btn-active btn-primary btn-sm md:btn-md">Get Started</button>
           </Link>
         </div>
