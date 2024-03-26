@@ -1,5 +1,5 @@
 import AdminLayout from "@/layouts/AdminLayout";
-import axios from "axios";
+import axios from "@/libs/axios";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -37,23 +37,15 @@ export default function Adduser() {
         toast.error("Password mismatch");
         return;
       }
-      let isAdmin = document.getElementById('admin').checked || false;
-      const res = await axios.post(
-        "https://gitbase.pythonanywhere.com" + "/accounts/register",
-        {
-          username: userDetails.userName,
-          email: userDetails.email,
-          first_name: userDetails.firstName,
-          last_name: userDetails.lastName,
-          password: userDetails.password,
-          is_creator: isAdmin
-        },
-        {
-          headers: {
-            Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-          },
-        }
-      );
+      let isAdmin = document.getElementById("admin").checked || false;
+      const res = await axios.post("/accounts/register", {
+        username: userDetails.userName,
+        email: userDetails.email,
+        first_name: userDetails.firstName,
+        last_name: userDetails.lastName,
+        password: userDetails.password,
+        is_creator: isAdmin,
+      });
 
       toast.success("User added successfully");
 
@@ -178,12 +170,23 @@ export default function Adduser() {
           <div className="form-control">
             <label className="label cursor-pointer justify-start gap-10">
               <span className="label-text font-semibold ">Make Admin</span>
-            <div className="flex justify-start gap-10 mb-0 pb-0">
-              Yes
-              <input type="radio" name="radio-1" id="admin" className="radio" />
-              No
-              <input type="radio" name="radio-1" id="notAdmin" className="radio" checked />
-            </div>
+              <div className="flex justify-start gap-10 mb-0 pb-0">
+                Yes
+                <input
+                  type="radio"
+                  name="radio-1"
+                  id="admin"
+                  className="radio"
+                />
+                No
+                <input
+                  type="radio"
+                  name="radio-1"
+                  id="notAdmin"
+                  className="radio"
+                  checked
+                />
+              </div>
             </label>
           </div>
 
@@ -211,7 +214,7 @@ export default function Adduser() {
                   <label
                     htmlFor="my-alert"
                     className="btn btn-secondary w-[8rem]  "
-                    onClick={()=>{}}
+                    onClick={() => {}}
                   >
                     No
                   </label>

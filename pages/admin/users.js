@@ -6,9 +6,9 @@ import Link from "next/link";
 import AdminLayout from "@/layouts/AdminLayout";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { format } from "timeago.js";
 import Dustbin from "@/icons/dustbin";
+import axios from "@/libs/axios";
 
 export default function Users() {
   const [userMode, setUserMode] = useState("All Users");
@@ -47,19 +47,9 @@ export default function Users() {
     return users;
   };
 
-
-
   async function fetchUsers() {
     try {
-      let config = {
-        headers: {
-          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-        },
-      };
-      const allUsers = await axios.get(
-        "https://gitbase.pythonanywhere.com" + "/accounts/register",
-        config
-      );
+      const allUsers = await axios.get("/accounts/register");
       setUserDetails(convertToUserFormat(allUsers.data));
       setAllUserDetails(convertToUserFormat(allUsers.data));
     } catch (e) {
@@ -69,19 +59,13 @@ export default function Users() {
   }
   async function removeUsers(userName) {
     try {
-      let config = {
-        headers: {
-          Authorization: "Token fe79b187e8f57e6f5ee9afefdd14388ae972ee0f",
-        },
-        params:{
+      const config = {
+        params: {
           username: userName,
-        }
+        },
       };
-      const allUsers = await axios.delete(
-        "https://gitbase.pythonanywhere.com" + "/accounts/register",
-        config
-      );
-      fetchUsers()
+      const allUsers = await axios.delete("/accounts/register", config);
+      fetchUsers();
       toast.success("User has been Removed!");
     } catch (e) {
       console.log(e);
@@ -155,9 +139,7 @@ export default function Users() {
       <div>
         {userDetails.map((user) => (
           <div className="flex justify-center" key={user.userName}>
-            <div
-              className="flex items-center justify-between w-[80%] gap-3 p-3 my-3 mt-5 border shadow rounded-full"
-            >
+            <div className="flex items-center justify-between w-[80%] gap-3 p-3 my-3 mt-5 border shadow rounded-full">
               <div className="w-[10%]">
                 <Link href="/admin">
                   <img
@@ -204,11 +186,18 @@ export default function Users() {
                 </div>
               </div>
               <div className="w-[5%]  form-control">
-                <label htmlFor={`remove-${user.userName}`} className=" flex-1 hover:cursor-pointer">
+                <label
+                  htmlFor={`remove-${user.userName}`}
+                  className=" flex-1 hover:cursor-pointer"
+                >
                   <Dustbin />
                 </label>
               </div>
-              <input type="checkbox"  id={`remove-${user.userName}`} className="modal-toggle" />
+              <input
+                type="checkbox"
+                id={`remove-${user.userName}`}
+                className="modal-toggle"
+              />
               <div className="modal">
                 <div className="modal-box">
                   <h3 className="font-bold text-lg">Remove User</h3>
@@ -220,7 +209,9 @@ export default function Users() {
                       <label
                         htmlFor={`remove-${user.userName}`}
                         className="btn btn-primary w-[8rem] "
-                        onClick={()=>{removeUsers(user.userName);}}
+                        onClick={() => {
+                          removeUsers(user.userName);
+                        }}
                       >
                         Yes
                       </label>

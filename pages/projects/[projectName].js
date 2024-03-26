@@ -10,8 +10,8 @@ import { EditIcon } from "@/icons/edit";
 import { TickIcon } from "@/icons/tick";
 import { CloseIcon } from "@/icons/close";
 import { toast } from "react-toastify";
-import axios from "axios";
 import AddUserToProjectModal from "@/components/AddUserToProjectModal";
+import axios from "@/libs/axios";
 
 export default function ProjectPage() {
   const router = useRouter();
@@ -38,15 +38,8 @@ export default function ProjectPage() {
   const editDesc = async () => {
     try {
       const res = await axios.putForm(
-        "https://gitbase.pythonanywhere.com" +
-          "/project/adminProjectUpdate/" +
-          projectDetails.projectId,
-        { project_description: desc },
-        {
-          headers: {
-            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
-          },
-        }
+        "/project/adminProjectUpdate/" + projectDetails.projectId,
+        { project_description: desc }
       );
 
       toast.success("Updated successfully");
@@ -61,16 +54,9 @@ export default function ProjectPage() {
     if (!router.query.projectName) return;
 
     try {
-      const res = await axios.putForm(
-        "https://gitbase.pythonanywhere.com" +
-          "/project/adminProjectAccess/" +
-          projectAccessId,
-        { is_manager: isManager },
-        {
-          headers: {
-            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
-          },
-        }
+      const res = await axios.put(
+        "/project/adminProjectAccess/" + projectAccessId,
+        { is_manager: isManager }
       );
       toast.success("Access updated");
 
@@ -89,14 +75,7 @@ export default function ProjectPage() {
 
     try {
       const res = await axios.delete(
-        "https://gitbase.pythonanywhere.com" +
-          "/project/adminProjectAccess/" +
-          projectAccessId,
-        {
-          headers: {
-            Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
-          },
-        }
+        "/project/adminProjectAccess/" + projectAccessId
       );
       toast.success("Access revoked");
 
@@ -111,15 +90,9 @@ export default function ProjectPage() {
   const fetchProjectAccess = async () => {
     if (!router.query.projectName) return;
 
-    const res = await axios.get(
-      "https://gitbase.pythonanywhere.com" + "/project/adminProjectAccess",
-      {
-        params: { project_name: router.query.projectName },
-        headers: {
-          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
-        },
-      }
-    );
+    const res = await axios.get("/project/adminProjectAccess", {
+      params: { project_name: router.query.projectName },
+    });
 
     setUsers(
       res.data.map((user) => ({
@@ -138,15 +111,9 @@ export default function ProjectPage() {
   const fetchRepos = async () => {
     if (!router.query.projectName) return;
 
-    const res = await axios.get(
-      "https://gitbase.pythonanywhere.com" + "/project/projectRepository",
-      {
-        params: { project_name: router.query.projectName },
-        headers: {
-          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
-        },
-      }
-    );
+    const res = await axios.get("/project/projectRepository", {
+      params: { project_name: router.query.projectName },
+    });
 
     setRepos(
       res.data.map((repo) => ({
@@ -169,15 +136,9 @@ export default function ProjectPage() {
   const fetchProjectDetails = async () => {
     if (!router.query.projectName) return;
 
-    const res = await axios.get(
-      "https://gitbase.pythonanywhere.com" + "/project/userProjectDetail",
-      {
-        params: { project_name: router.query.projectName },
-        headers: {
-          Authorization: "Token 59b0ff21064cb48940763f6d671f958cefce80ec",
-        },
-      }
-    );
+    const res = await axios.get("/project/userProjectDetail", {
+      params: { project_name: router.query.projectName },
+    });
 
     setProjectDetails({
       projectName: router.query.projectName,
