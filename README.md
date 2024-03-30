@@ -2,7 +2,7 @@
   <a href="http://gitbase.sytes.net">
     <img
       src="http://gitbase.sytes.net/logo4.png"
-      alt="Gitbase Logo"
+      alt="Gitbase Logo1"
       height="64"
     />
   </a>
