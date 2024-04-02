@@ -20,55 +20,55 @@ export default function UserPage() {
       noOfUsers: 10,
     }))
   );
-  const [repos, setRepos] = useState(
-    new Array(2).fill(0).map((_, id) => ({
-      id,
-      project: "Project 4",
-      name: "Repo " + id,
-      createdAt: new Date().toDateString(),
-      description:
-        "Description. Description. Description. Description. Description. Description. Description. Description. ",
-      noOfUsers: 10,
-      createdBy: {
-        userId: "User " + id,
-        userName: "creator",
-        photoUrl: "https://gitbase.pythonanywhere.com" + "/media/default.png",
-      },
-    }))
-  );
+  const [repos, setRepos] = useState([]);
   const [user, setUser] = useState();
   const { query } = useRouter();
   const { user: myUser } = useUser();
   const isLogedin = myUser?.userName == user?.userName;
-  console.log(isLogedin,myUser?.userName,user?.userName);
+
   async function fetchDetails() {
     try {
       const userName = query.userName;
       const repoRes = await axios.get(
         `/repository/getUserRepos?username=${userName}`
-      );  
+      );
       if (!repoRes.data.UserDetails) return { notFound: true };
-
-      const repos = repoRes.data.RepoDetails.map((repo) => ({
-        name: repo.repo_name,
-        id: repo.repo_id,
-        isPublic: true,
-        createdAt: repo.date_of_creation,
-        is_pinned: false,
-        is_forked: false,
-        stars: 2,
-      }));
       const user = repoRes.data.UserDetails;
-      setRepos(repos);
-      console.log(user)
+
+      setRepos(
+        repoRes.data.RepoDetails.slice(0, 2).map((repo) => ({
+          id,
+          project: repo.project_id.project_name,
+          name: repo.contributors_count,
+          createdAt: repo.created_at,
+          description: repo.repo_description,
+          noOfUsers: 10,
+          createdBy: {
+            userId: repo.created_by.id,
+            userName: repo.created_by.username,
+            photoUrl: process.env.NEXT_PUBLIC_API + repo.created_by.profile_pic,
+          },
+        }))
+      );
+
       setUser({
         userName: user.username,
         lastName: user.last_name,
         firstName: user.first_name,
         email: user.email,
-        bio:user.bio,
+        bio: user.bio,
         photoUrl: process.env.NEXT_PUBLIC_API + user.profile_pic,
       });
+
+      setProjects(
+        repoRes.data.ProjectDetails.slice(0, 2).map((proj) => ({
+          name: proj.project_name,
+          createdAt: proj.created_at,
+          description: proj.project_description,
+          noOfRepos: proj.repos_count,
+          noOfUsers: proj.members_count,
+        }))
+      );
     } catch (e) {
       console.log(e);
     }
@@ -128,11 +128,16 @@ export default function UserPage() {
               <p className="text-xl font-semibold">Recent Project</p>
               {myUser?.userName === query.userName && (
                 <Link href="/projects">
-                  <button className="btn btn-sm">All projects</button>
+                  <a className="btn btn-sm">All projects</a>
                 </Link>
               )}
             </div>
             <div className="h-[2px] w-full my-2 bg-gray-300" />
+            {projects.length == 0 && (
+              <div className="flex justify-center my-16">
+                <h2 className="text-2xl font-bold">No projects Found</h2>
+              </div>
+            )}
             {projects.map((project) => (
               <div
                 className="bg-white my-1 flex flex-1 items-center justify-between gap-4 p-3 border shadow rounded-md basis-[450px]"
@@ -141,7 +146,9 @@ export default function UserPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="text-lg font-medium">
-                      <Link href={"/" + project.name}>{project.name}</Link>
+                      <Link href={"/projects/" + project.name}>
+                        {project.name}
+                      </Link>
                     </h3>
                     <div className="w-[6px] aspect-square rounded-full bg-gray-300"></div>
                     <p className="text-gray-400 text-sm">
@@ -170,11 +177,16 @@ export default function UserPage() {
               <p className="text-xl font-semibold">Recent Repositories</p>
               {myUser?.userName === query.userName && (
                 <Link href="/repos">
-                  <button className="btn btn-sm">All Repos</button>
+                  <a className="btn btn-sm">All Repos</a>
                 </Link>
               )}
             </div>
             <div className="h-[2px] w-full my-2 bg-gray-300" />
+            {repos.length == 0 && (
+              <div className="flex justify-center my-16">
+                <h2 className="text-2xl font-bold">No Repositories Found</h2>
+              </div>
+            )}
             {repos.map((repo) => (
               <div
                 className="bg-white flex justify-between gap-3 p-3 my-2 border shadow rounded-md"
@@ -183,7 +195,9 @@ export default function UserPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="text-lg font-medium underline">
-                      {repo.project}/{repo.name}
+                      <Link href={`/${repo.project}/${repo.name}`}>
+                        {repo.project + "/" + repo.name}
+                      </Link>
                     </h3>
                     <div className="w-[6px] aspect-square rounded-full bg-gray-300" />
                     <p className="text-gray-400 text-sm">
