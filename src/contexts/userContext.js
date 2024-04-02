@@ -29,6 +29,7 @@ export default function AuthProvider({ children }) {
         bio: data.bio,
         photoUrl: process.env.NEXT_PUBLIC_API + data.profile_pic,
         userId: data.user_id,
+        isAdmin:data.is_creator
       });
     } catch (e) {
       setUser(null);
@@ -39,8 +40,7 @@ export default function AuthProvider({ children }) {
     try {
       localStorage.removeItem('token')
       const res = await axios.post(`/accounts/login`, { email, password });
-      setUser(res.data);
-      console.log(res.data);
+      setUser(res.data)
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("id", res.data.id);
 

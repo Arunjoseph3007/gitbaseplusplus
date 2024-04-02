@@ -46,8 +46,7 @@ export default function UserPage() {
       const userName = query.userName;
       const repoRes = await axios.get(
         `/repository/getUserRepos?username=${userName}`
-      );
-      console.log("Here",repoRes.data)  
+      );  
       if (!repoRes.data.UserDetails) return { notFound: true };
 
       const repos = repoRes.data.RepoDetails.map((repo) => ({

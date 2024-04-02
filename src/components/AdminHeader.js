@@ -13,9 +13,12 @@ export default function AdminHeader() {
           </div>
         </div>
         <div className="text-2xl font-bold">Gitbase</div>
+        {user && (<>
+        
         <div className="flex items-center justify-evenly w-[100%] mt-[1%] font-mono font-semibold">
           <div className="w-[20%] flex justify-center">
-            Bhavik Shah
+          {user.firstName}{" "}{user.lastName}
+            
             {user && (
               <>
                 <div className="">
@@ -43,12 +46,13 @@ export default function AdminHeader() {
               </>
             )}
           </div>
-          <div className="w-[20%] flex justify-center">bhavik_admin@123</div>
+          <div className="w-[20%] flex justify-center">{user.userName}</div>
           <div className="w-[20%] flex justify-center">
-            gitbase+admin@gmail.com
+            {user.email}
           </div>
         </div>
         <div className="divider"></div>
+        </>)}
       </div>
     </div>
   );

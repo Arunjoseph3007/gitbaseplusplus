@@ -31,7 +31,7 @@ function EditProfileModal() {
         formdata.append("profile_pic", imageDetails.imageFile, "img.jpg");
       }
       const res = await axios.patch(
-        `/accounts/MyUser/${localStorage.getItem("id")}/`,
+        `/accounts/MyUser`,
         formdata
       );
       setUser({
