@@ -25,7 +25,7 @@ export default function CreateRepoPage() {
       });
 
       toast.success("Repo created sucessfully");
-      router.push(`/${res.data.user_name}/${res.data.repo_name}`);
+      router.push(`/${router.query.userName}/${res.data.repo_name}`);
     } catch (error) {
       setError(error);
       toast.error("Something went wrong");
