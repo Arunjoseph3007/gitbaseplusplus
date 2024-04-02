@@ -18,9 +18,10 @@ export default function CreateRepoPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`/main/repo/`, {
+      const res = await axios.post(`/repository/userRepos`, {
         repo_name: repoName,
-        is_public: isPublic,
+        repo_description: repoDesc,
+        project_name: router.query.userName
       });
 
       toast.success("Repo created sucessfully");
@@ -89,45 +90,7 @@ export default function CreateRepoPage() {
           type="text"
           className="input input-bordered"
         />
-
-        {/* //@ Radio buttons */}
-        <div className="my-4">
-          <div className="flex items-center gap-3 mb-3">
-            <input
-              type="radio"
-              name="radio-public"
-              className="radio"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
-            />
-            <PublicIcon />
-            <label>
-              <h4>Public</h4>
-              <p className="text-sm text-secondary">
-                Anyone on the internet can see this repository. You choose who
-                can commit.
-              </p>
-            </label>
-          </div>
-          <div className="flex items-center gap-3 mb-3">
-            <input
-              type="radio"
-              name="radio-private"
-              className="radio"
-              checked={!isPublic}
-              onChange={(e) => setIsPublic(!e.target.checked)}
-            />
-            <LockIcon />
-            <label>
-              <h4>Private</h4>
-              <p className="text-sm text-secondary">
-                You choose who can see and commit to this repository.
-              </p>
-            </label>
-          </div>
-        </div>
-
-        <button className="btn" type="submit">
+        <button className="btn mt-10" type="submit">
           Create Repository
         </button>
       </form>
