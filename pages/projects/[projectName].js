@@ -394,9 +394,11 @@ export default function ProjectPage() {
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-lg font-medium underline">
+                    <Link href={"/"+repo.project+"/"+repo.name}>
+                    <h3 className="text-lg font-medium underline cursor-pointer">
                       {repo.project}/{repo.name}
                     </h3>
+                    </Link>
                     <div className="w-[6px] aspect-square rounded-full bg-gray-300" />
                     <p className="text-gray-400 text-sm">
                       {format(repo.createdAt)}

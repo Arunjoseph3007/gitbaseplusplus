@@ -27,7 +27,7 @@ const PAGES = [
   { title: "branches", icon: <BranchIcon />, link: "branches" },
   // { title: "Pull requests", icon: <PullRequestIcon />, link: "pulls" },
   { title: "commits", icon: <CommitIcon />, link: "commits/main" },
-  { title: "graph", icon: <GraphIcon />, link: "graph" },
+  // { title: "graph", icon: <GraphIcon />, link: "graph" },
   {
     title: "collaborators",
     icon: <CollaboratorsIcon />,
@@ -104,7 +104,7 @@ export default function MainRepoLayout(page) {
                 <span>/</span>
                 <Link href={basePath}>{query.repoName}</Link>
               </h1>
-              <span className="badge">{isPublic ? "Public" : "Private"}</span>
+              {/* <span className="badge">{isPublic ? "Public" : "Private"}</span> */}
             </div>
 
             <ForkStar

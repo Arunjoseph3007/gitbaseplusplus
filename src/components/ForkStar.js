@@ -16,10 +16,10 @@ function ForkStar({ basePath, isStar, Star_Repo }) {
           <span className="hidden md:block">fork</span>
         </button>
       </Link>
-      <button className="btn btn-sm md:btn gap-2 items-center " onClick={Star_Repo}>
+      {/* <button className="btn btn-sm md:btn gap-2 items-center " onClick={Star_Repo}>
         {isStar ? <Starred /> : <StarIcon  />}
         <span className="hidden md:block">star</span>
-      </button>
+      </button> */}
     </div>
   );
 }
