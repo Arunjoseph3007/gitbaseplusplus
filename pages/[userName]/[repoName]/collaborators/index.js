@@ -61,6 +61,7 @@ export default function ColaboratorsPage() {
         userName: user.username,
         firstName: user.first_name,
         secondName: user.last_name,
+        fullName: user.first_name + " " + user.last_name,
         email: user.email,
         userId: user.id,
         image: "https://gitbase.pythonanywhere.com" + user.profile_pic,

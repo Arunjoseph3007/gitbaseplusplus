@@ -9,17 +9,7 @@ import { CollaboratorsIcon } from "@/icons/collaborators";
 import { BranchIcon } from "@/icons/branch";
 
 export default function UserPage() {
-  const [projects, setProjects] = useState(
-    new Array(2).fill(0).map((_, id) => ({
-      id,
-      name: "Project " + id,
-      createdAt: new Date().toDateString(),
-      description:
-        "Description. Description. Description. Description. Description. Description. Description. Description. ",
-      noOfRepos: 2,
-      noOfUsers: 10,
-    }))
-  );
+  const [projects, setProjects] = useState([]);
   const [repos, setRepos] = useState([]);
   const [user, setUser] = useState();
   const { query } = useRouter();
@@ -37,7 +27,7 @@ export default function UserPage() {
 
       setRepos(
         repoRes.data.RepoDetails.slice(0, 2).map((repo) => ({
-          id,
+          id: repo.id,
           project: repo.project_id.project_name,
           name: repo.contributors_count,
           createdAt: repo.created_at,
