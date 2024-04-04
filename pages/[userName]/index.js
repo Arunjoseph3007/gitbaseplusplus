@@ -29,10 +29,10 @@ export default function UserPage() {
         repoRes.data.RepoDetails.slice(0, 2).map((repo) => ({
           id: repo.id,
           project: repo.project_id.project_name,
-          name: repo.contributors_count,
+          name: repo.repo_name,
           createdAt: repo.created_at,
           description: repo.repo_description,
-          noOfUsers: 10,
+          noOfUsers: repo.contributors_count,
           createdBy: {
             userId: repo.created_by.id,
             userName: repo.created_by.username,
