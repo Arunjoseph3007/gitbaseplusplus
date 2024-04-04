@@ -258,15 +258,17 @@ export default function ProjectPage() {
                     </span>
                   </button>
                 </div>
-              ) : (myUser.isAdmin &&
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="absolute -top-2 -right-2 btn btn-circle btn-sm"
-                >
-                  <span className="scale-75">
-                    <EditIcon />
-                  </span>
-                </button>
+              ) : (
+                myUser.isAdmin && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="absolute -top-2 -right-2 btn btn-circle btn-sm"
+                  >
+                    <span className="scale-75">
+                      <EditIcon />
+                    </span>
+                  </button>
+                )
               )}
             </div>
           </div>
@@ -299,17 +301,18 @@ export default function ProjectPage() {
         {/* User tab */}
         {tab == "user" && (
           <div>
-
-            {myUser.isAdmin && (<div className="flex gap-3 items-center max-w-[850px] mx-auto my-6">
-              <input
-                className="input input-bordered rounded-full flex-1"
-                placeholder="Search users..."
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <AddUserToProjectModal
-                refetchProjectAccess={fetchProjectAccess}
-              />
-            </div>)}
+            {myUser.isAdmin && (
+              <div className="flex gap-3 items-center max-w-[850px] mx-auto my-6">
+                <input
+                  className="input input-bordered rounded-full flex-1"
+                  placeholder="Search users..."
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <AddUserToProjectModal
+                  refetchProjectAccess={fetchProjectAccess}
+                />
+              </div>
+            )}
             {users
               .filter(
                 (user) =>
@@ -343,50 +346,49 @@ export default function ProjectPage() {
                       <p className="text-gray-500 text-sm w-[60px]">Email</p>
                       <p>{user.email}</p>
                     </div>
-                    
 
-                        <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center gap-2 mt-2">
                       <p className="text-gray-500 text-sm w-[60px]">Role</p>
                       <p>{user.isManager ? "Manager" : "Developer"}</p>
                     </div>
-                     
                   </div>
-                  {
-                      myUser.isAdmin &&(
-                  <div className="flex flex-col items-end gap-1">
-                    <div className="dropdown dropdown-end">
-                      <label tabIndex={0} className="btn btn-success w-36">
-                        Change Role
-                      </label>
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content border-2 menu p-2 shadow-xl bg-base-100 rounded-box w-52"
-                      >
-                        <li
-                          onClick={() =>
-                            updateProjectAccess(user.projectAccessId, true)
-                          }
+                  {myUser.isAdmin && (
+                    <div className="flex flex-col items-end gap-1">
+                      <div className="dropdown dropdown-end">
+                        <label tabIndex={0} className="btn btn-success w-36">
+                          Change Role
+                        </label>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content border-2 menu p-2 shadow-xl bg-base-100 rounded-box w-52"
                         >
-                          <a>Manager {user.isManager && <TickIcon />}</a>
-                        </li>
-                        <li
-                          onClick={() =>
-                            updateProjectAccess(user.projectAccessId, false)
-                          }
-                        >
-                          <a>Developer {!user.isManager && <TickIcon />}</a>
-                        </li>
-                      </ul>
-                    </div>
+                          <li
+                            onClick={() =>
+                              updateProjectAccess(user.projectAccessId, true)
+                            }
+                          >
+                            <a>Manager {user.isManager && <TickIcon />}</a>
+                          </li>
+                          <li
+                            onClick={() =>
+                              updateProjectAccess(user.projectAccessId, false)
+                            }
+                          >
+                            <a>Developer {!user.isManager && <TickIcon />}</a>
+                          </li>
+                        </ul>
+                      </div>
 
-                    <button
-                      onClick={() => removeProjectAccess(user.projectAccessId)}
-                      className="btn btn-error w-36"
-                    >
-                      Remove User
-                    </button>
-                  </div>
-                      )}
+                      <button
+                        onClick={() =>
+                          removeProjectAccess(user.projectAccessId)
+                        }
+                        className="btn btn-error w-36"
+                      >
+                        Remove User
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
           </div>
@@ -402,10 +404,10 @@ export default function ProjectPage() {
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <Link href={"/"+repo.project+"/"+repo.name}>
-                    <h3 className="text-lg font-medium underline cursor-pointer">
-                      {repo.project}/{repo.name}
-                    </h3>
+                    <Link href={"/" + repo.project + "/" + repo.name}>
+                      <h3 className="text-lg font-medium underline cursor-pointer">
+                        {repo.project}/{repo.name}
+                      </h3>
                     </Link>
                     <div className="w-[6px] aspect-square rounded-full bg-gray-300" />
                     <p className="text-gray-400 text-sm">
