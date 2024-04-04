@@ -12,6 +12,7 @@ import { CloseIcon } from "@/icons/close";
 import { toast } from "react-toastify";
 import AddUserToProjectModal from "@/components/AddUserToProjectModal";
 import axios from "@/libs/axios";
+import { useUser } from "@/context/userContext";
 
 export default function ProjectPage() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function ProjectPage() {
   });
   const [users, setUsers] = useState([]);
   const [repos, setRepos] = useState([]);
+  const { user: myUser } = useUser();
 
   const editDesc = async () => {
     try {
@@ -256,7 +258,7 @@ export default function ProjectPage() {
                     </span>
                   </button>
                 </div>
-              ) : (
+              ) : (myUser.isAdmin &&
                 <button
                   onClick={() => setIsEditing(true)}
                   className="absolute -top-2 -right-2 btn btn-circle btn-sm"
@@ -297,7 +299,8 @@ export default function ProjectPage() {
         {/* User tab */}
         {tab == "user" && (
           <div>
-            <div className="flex gap-3 items-center max-w-[850px] mx-auto my-6">
+
+            {myUser.isAdmin && (<div className="flex gap-3 items-center max-w-[850px] mx-auto my-6">
               <input
                 className="input input-bordered rounded-full flex-1"
                 placeholder="Search users..."
@@ -306,7 +309,7 @@ export default function ProjectPage() {
               <AddUserToProjectModal
                 refetchProjectAccess={fetchProjectAccess}
               />
-            </div>
+            </div>)}
             {users
               .filter(
                 (user) =>
@@ -340,12 +343,16 @@ export default function ProjectPage() {
                       <p className="text-gray-500 text-sm w-[60px]">Email</p>
                       <p>{user.email}</p>
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
+                    
+
+                        <div className="flex items-center gap-2 mt-2">
                       <p className="text-gray-500 text-sm w-[60px]">Role</p>
                       <p>{user.isManager ? "Manager" : "Developer"}</p>
                     </div>
+                     
                   </div>
-
+                  {
+                      myUser.isAdmin &&(
                   <div className="flex flex-col items-end gap-1">
                     <div className="dropdown dropdown-end">
                       <label tabIndex={0} className="btn btn-success w-36">
@@ -379,6 +386,7 @@ export default function ProjectPage() {
                       Remove User
                     </button>
                   </div>
+                      )}
                 </div>
               ))}
           </div>

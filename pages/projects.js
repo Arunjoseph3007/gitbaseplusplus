@@ -41,7 +41,7 @@ export default function ProjectsPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-medium">
-                  <Link href={"/" + project.name}>{project.name}</Link>
+                  <Link href={"/projects/" + project.name}>{project.name}</Link>
                 </h3>
                 <div className="w-[6px] aspect-square rounded-full bg-gray-300"></div>
                 <p className="text-gray-400 text-sm">

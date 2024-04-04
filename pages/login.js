@@ -21,8 +21,8 @@ export default function Login() {
     e.preventDefault();
 
     const data = await login(userDetails);
-    if (data.success && user.isAdmin) router.push("/admin" )
-    else if(data.success) router.push("/" + user.userName);
+    if (data.success && data.is_admin) router.push("/admin" )
+    else if(data.success) router.push("/" + data.username);
   };
 
   return (
