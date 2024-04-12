@@ -100,7 +100,7 @@ export default function MainRepoLayout(page) {
             <div className="flex items-center gap-3 flex-1">
               {isPublic ? <PublicIcon /> : <LockIcon />}
               <h1 className="text-lg md:text-2xl text-blue-500 dot-dot-dot">
-                <Link href={`/${query.userName}`}>{query.userName}</Link>
+                <Link href={`/projects/${query.userName}`}>{query.userName}</Link>
                 <span>/</span>
                 <Link href={basePath}>{query.repoName}</Link>
               </h1>
